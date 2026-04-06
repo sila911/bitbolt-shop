@@ -1,6 +1,6 @@
 import { X, Trash2, CreditCard } from 'lucide-react'
 
-export default function CartDrawer({ isOpen, cart, onClose, onRemove, subtotal, onCheckout }) {
+export default function CartDrawer({ isOpen, cart, onClose, onRemove, subtotal, onCheckout, isCheckingOut }) {
   if (!isOpen) return null
 
   const groupedCart = Object.values(
@@ -57,10 +57,11 @@ export default function CartDrawer({ isOpen, cart, onClose, onRemove, subtotal, 
           </div>
           <button
             onClick={onCheckout}
-            className="w-full brand-gradient text-white py-6 rounded-3xl font-semibold text-lg flex items-center justify-center gap-3 hover:opacity-90 transition-opacity"
+            disabled={cart.length === 0 || isCheckingOut}
+            className="w-full brand-gradient text-white py-6 rounded-3xl font-semibold text-lg flex items-center justify-center gap-3 hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
           >
             <CreditCard size={24} />
-            CHECKOUT — SEND TO TELEGRAM
+            {isCheckingOut ? 'SENDING...' : 'CHECKOUT — SEND TO TELEGRAM'}
           </button>
           <p className="text-center text-[var(--color-muted)] text-sm mt-6 cursor-pointer" onClick={onClose}>
             Continue shopping
