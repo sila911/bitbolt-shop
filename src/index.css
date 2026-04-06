@@ -21,6 +21,10 @@
 }
 
 @layer base {
+  html {
+    font-size: 87.5%;
+  }
+
   body {
     font-family: 'Inter', system-ui, sans-serif;
     background: linear-gradient(135deg, #f3f0ff 0%, #fdeefe 52%, #eff6ff 100%);

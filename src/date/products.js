@@ -5,7 +5,7 @@ export const productsData = [
     category: "Laptop",
     price: 2499,
     rating: 4.9,
-    img: "https://picsum.photos/id/1015/800/600",
+    img: "https://i.pinimg.com/1200x/18/30/7d/18307dfde0f655618d822607bda8c931.jpg",
     sold: 342,
     description: "M4 Pro chip • 32GB RAM • 1TB SSD • Liquid Retina XDR display"
   },
@@ -15,7 +15,7 @@ export const productsData = [
     category: "Phone",
     price: 1199,
     rating: 5,
-    img: "https://picsum.photos/id/201/800/600",
+    img: "https://i.pinimg.com/736x/67/bb/3d/67bb3d1e77f23b077487f06c8007737f.jpg",
     sold: 1248,
     description: "Titanium • A18 Pro • 256GB • 48MP Fusion Camera"
   },

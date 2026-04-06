@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 import { productsData } from './date/products'
 
 import Navbar from './components/Navbar'
@@ -19,6 +21,7 @@ export default function App() {
   const [detailProduct, setDetailProduct] = useState(null)
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(false)
+  const categorySectionRef = useRef(null)
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('bitbolt-theme')
     if (saved) return saved === 'dark'
@@ -30,6 +33,15 @@ export default function App() {
     localStorage.setItem('bitbolt-theme', isDarkMode ? 'dark' : 'light')
   }, [isDarkMode])
 
+  useEffect(() => {
+    AOS.init({
+      duration: 700,
+      easing: 'ease-out-cubic',
+      once: true,
+      offset: 80,
+    })
+  }, [])
+
   const filteredProducts = products.filter(p => {
     const q = searchTerm.trim().toLowerCase()
     const matchesSearch =
@@ -40,17 +52,32 @@ export default function App() {
     return matchesSearch && matchesCategory
   })
 
+  const suggestionPool = [...new Set(products.flatMap(p => [p.name, p.category]))]
+  const searchSuggestions = suggestionPool
+    .filter(item => item.toLowerCase().includes(searchTerm.trim().toLowerCase()))
+    .slice(0, 6)
+
   const addToCart = (product) => setCart([...cart, product])
   const toggleFavorite = (id) => {
     setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id])
   }
   const isFavorite = (id) => favorites.includes(id)
 
+  const handleSearchFocus = () => {
+    categorySectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const clearFilters = () => {
+    setSearchTerm('')
+    setSelectedCategory('All')
+  }
+
   const handleCheckout = () => {
     const botToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN
     const chatId = import.meta.env.VITE_TELEGRAM_CHAT_ID
     if (botToken && chatId) {
-      const message = `🛒 New BitBolt Order!\n\nItems: ${cart.map(i => i.name).join(', ')}\nTotal: $${cart.reduce((a, b) => a + b.price, 0)}`
+      const total = cart.reduce((a, b) => a + b.price, 0)
+      const message = `🛒 New BitBolt Order!\n\nItems: ${cart.map(i => i.name).join(', ')}\nTotal: ${total.toLocaleString()}$`
       // In real app you would fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`)
       console.log('📤 Sent to Telegram bot:', message)
       alert('✅ Order sent to your Telegram bot instantly!')
@@ -61,6 +88,10 @@ export default function App() {
     setIsCartOpen(false)
   }
 
+  useEffect(() => {
+    AOS.refresh()
+  }, [filteredProducts.length])
+
   return (
     <>
       <Navbar
@@ -68,23 +99,33 @@ export default function App() {
         favoritesCount={favorites.length}
         searchTerm={searchTerm}
         onSearchChange={e => setSearchTerm(e.target.value)}
+        searchSuggestions={searchSuggestions}
+        onSelectSuggestion={(value) => setSearchTerm(value)}
+        onSearchFocus={handleSearchFocus}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenFavorites={() => setIsFavoritesOpen(true)}
         isDarkMode={isDarkMode}
         onToggleDarkMode={() => setIsDarkMode(prev => !prev)}
       />
 
-      <Hero />
+      <div data-aos="fade-up">
+        <Hero />
+      </div>
 
-      <CategoryFilter selected={selectedCategory} onSelect={setSelectedCategory} />
+      <div ref={categorySectionRef} data-aos="fade-up" data-aos-delay="80">
+        <CategoryFilter selected={selectedCategory} onSelect={setSelectedCategory} />
+      </div>
 
-      <ProductGrid
-        products={filteredProducts}
-        onAddToCart={addToCart}
-        onToggleFavorite={toggleFavorite}
-        isFavorite={isFavorite}
-        onOpenDetail={setDetailProduct}
-      />
+      <div data-aos="fade-up" data-aos-delay="120">
+        <ProductGrid
+          products={filteredProducts}
+          onAddToCart={addToCart}
+          onToggleFavorite={toggleFavorite}
+          isFavorite={isFavorite}
+          onOpenDetail={setDetailProduct}
+          onClearFilters={clearFilters}
+        />
+      </div>
 
       <ProductDetailModal
         product={detailProduct}
@@ -99,7 +140,11 @@ export default function App() {
         isOpen={isCartOpen}
         cart={cart}
         onClose={() => setIsCartOpen(false)}
-        onRemove={(i) => setCart(cart.filter((_, idx) => idx !== i))}
+        onRemove={(productId) => {
+          const itemIndex = cart.findIndex(item => item.id === productId)
+          if (itemIndex === -1) return
+          setCart(cart.filter((_, idx) => idx !== itemIndex))
+        }}
         subtotal={cart.reduce((a, b) => a + b.price, 0)}
         onCheckout={handleCheckout}
       />
@@ -111,7 +156,9 @@ export default function App() {
         onAddToCart={addToCart}
       />
 
-      <Footer />
+      <div data-aos="fade-up" data-aos-delay="60">
+        <Footer />
+      </div>
     </>
   )
 }

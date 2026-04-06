@@ -1,7 +1,7 @@
 export default function CategoryFilter({ selected, onSelect }) {
   const cats = ['All', 'Laptop', 'Phone', 'Tablet', 'Audio']
   return (
-    <div className="flex gap-3 flex-wrap px-8 py-6">
+    <div className="flex justify-center gap-3 flex-wrap px-8 py-6">
       {cats.map(cat => (
         <button
           key={cat}

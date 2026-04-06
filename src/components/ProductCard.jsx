@@ -1,30 +1,35 @@
-import { Heart } from 'lucide-react'
+import { Heart, ShoppingBag } from 'lucide-react'
 
 export default function ProductCard({ product, onAddToCart, onToggleFavorite, isFavorite, onOpenDetail }) {
   return (
-    <div onClick={onOpenDetail} className="glass rounded-3xl overflow-hidden cursor-pointer group hover:scale-[1.02] transition-all">
-      <div className="relative">
-        <img src={product.img} alt={product.name} className="w-full h-64 object-cover" />
+    <article
+      onClick={onOpenDetail}
+      className="glass w-full rounded-[2.25rem] p-3 md:p-4 cursor-pointer group hover:-translate-y-1 hover:scale-[1.01] transition-all"
+    >
+      <div className="relative rounded-[1.75rem] overflow-hidden border-2 border-[var(--color-border)]">
+        <img src={product.img} alt={product.name} className="w-full aspect-[3/4] object-cover" />
         <button
           onClick={(e) => { e.stopPropagation(); onToggleFavorite(product.id) }}
-          className="absolute top-4 right-4 p-3 glass rounded-2xl"
+          className="absolute top-3 right-3 h-10 w-10 grid place-items-center glass rounded-full"
+          aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
         >
-          <Heart size={22} className={isFavorite ? 'fill-[var(--color-primary)] text-[var(--color-primary)]' : 'text-[var(--color-muted)]'} />
+          <Heart size={18} className={isFavorite ? 'fill-[var(--color-primary)] text-[var(--color-primary)]' : 'text-[var(--color-muted)]'} />
         </button>
       </div>
-      <div className="p-6">
-        <p className="text-[var(--color-primary)] text-sm">{product.category}</p>
-        <h3 className="font-semibold text-xl mt-1 line-clamp-1">{product.name}</h3>
-        <div className="flex justify-between items-end mt-6">
-          <p className="text-4xl font-bold text-[var(--color-text)]">${product.price}</p>
+      <div className="pt-4 px-1">
+        <p className="text-[var(--color-primary)] text-xs sm:text-sm leading-none">{product.category}</p>
+        <h3 className="font-semibold text-[var(--color-primary)] text-lg sm:text-xl md:text-2xl leading-tight tracking-tight mt-1 line-clamp-2">{product.name}</h3>
+        <div className="flex justify-between items-end mt-5">
+          <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--color-text)] leading-none">{product.price.toLocaleString()}$</p>
           <button
             onClick={(e) => { e.stopPropagation(); onAddToCart(product) }}
-            className="brand-gradient text-white px-8 py-4 rounded-3xl font-semibold text-sm"
+            className="h-11 w-11 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-2xl brand-gradient text-white grid place-items-center shadow-lg"
+            aria-label={`Add ${product.name} to cart`}
           >
-            Add to Cart
+            <ShoppingBag size={20} className="md:h-6 md:w-6" />
           </button>
         </div>
       </div>
-    </div>
+    </article>
   )
 }
