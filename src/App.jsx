@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import { productsData } from './date/products'
+import { fetchAllProducts } from './services/productApi'
+import { ProductGridSkeleton } from './components/ProductSkeleton'
 
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -15,7 +16,9 @@ import StatusPopup from './components/StatusPopup'
 import Footer from './components/Footer'
 
 export default function App() {
-  const [products] = useState(productsData)
+  const [products, setProducts] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -37,6 +40,23 @@ export default function App() {
     document.documentElement.classList.toggle('dark', isDarkMode)
     localStorage.setItem('bitbolt-theme', isDarkMode ? 'dark' : 'light')
   }, [isDarkMode])
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setIsLoading(true)
+        setError(null)
+        const fetchedProducts = await fetchAllProducts()
+        setProducts(fetchedProducts)
+      } catch (err) {
+        setError(err.message)
+        console.error('Error loading products:', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadProducts()
+  }, [])
 
   useEffect(() => {
     AOS.init({
@@ -186,16 +206,60 @@ export default function App() {
         <CategoryFilter selected={selectedCategory} onSelect={setSelectedCategory} />
       </div>
 
-      <div data-aos="fade-up" data-aos-delay="120">
-        <ProductGrid
-          products={filteredProducts}
-          onAddToCart={addToCart}
-          onToggleFavorite={toggleFavorite}
-          isFavorite={isFavorite}
-          onOpenDetail={setDetailProduct}
-          onClearFilters={clearFilters}
-        />
-      </div>
+      {isLoading && (
+        <div data-aos="fade-up" data-aos-delay="120" className="container mx-auto px-4 py-16">
+          <ProductGridSkeleton count={8} />
+        </div>
+      )}
+
+      {error && (
+        <div data-aos="fade-up" data-aos-delay="120" className="container mx-auto px-4 py-16">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-8">
+            <div className="flex items-start gap-4">
+              <div className="text-red-600 dark:text-red-400 text-3xl">⚠️</div>
+              <div className="flex-1">
+                <h3 className="text-red-800 dark:text-red-300 font-semibold text-lg mb-2">Failed to Load Products</h3>
+                <p className="text-red-700 dark:text-red-400 text-sm mb-1">{error}</p>
+                <p className="text-red-600 dark:text-red-500 text-xs mb-4">Check your internet connection and try again</p>
+                <button
+                  onClick={() => {
+                    setError(null)
+                    setIsLoading(true)
+                    const loadProducts = async () => {
+                      try {
+                        const fetchedProducts = await fetchAllProducts()
+                        setProducts(fetchedProducts)
+                        setError(null)
+                      } catch (err) {
+                        setError(err.message)
+                      } finally {
+                        setIsLoading(false)
+                      }
+                    }
+                    loadProducts()
+                  }}
+                  className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white px-4 py-2 rounded text-sm font-medium transition"
+                >
+                  <span>🔄</span> Retry
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!isLoading && !error && (
+        <div data-aos="fade-up" data-aos-delay="120">
+          <ProductGrid
+            products={filteredProducts}
+            onAddToCart={addToCart}
+            onToggleFavorite={toggleFavorite}
+            isFavorite={isFavorite}
+            onOpenDetail={setDetailProduct}
+            onClearFilters={clearFilters}
+          />
+        </div>
+      )}
 
       <ProductDetailModal
         product={detailProduct}
