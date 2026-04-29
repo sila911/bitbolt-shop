@@ -7,10 +7,10 @@ export default function Footer() {
           <h1 className="logo-font text-4xl tracking-tighter text-[var(--color-text)]">BitBolt</h1>
         </div>
         <p className="text-[var(--color-muted)]">
-          © 2026 BitBolt • Instant digital delivery • Glassmorphism UI
+          © 2026 BitBolt • Instant digital delivery 
         </p>
         <p className="text-xs text-[var(--color-muted)] mt-8">
-          Made with ❤️ in Phnom Penh • Telegram checkout enabled
+          Built with React and Tailwind CSS by
         </p>
       </div>
     </footer>
