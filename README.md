@@ -97,7 +97,3 @@ To deploy the project, run:
 npm run build
 ```
 This will generate a `dist` folder with the production build.
-
-## License 📜
-
-This project is licensed under the MIT License.
