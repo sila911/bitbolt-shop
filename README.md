@@ -90,10 +90,3 @@ Here is the folder structure of the project:
 └── vite.config.ts           # Vite configuration
 ```
 
-## Deployment 🌐
-
-To deploy the project, run:
-```bash
-npm run build
-```
-This will generate a `dist` folder with the production build.
