@@ -26,9 +26,6 @@ BitBolt is a modern e-commerce platform designed to provide a seamless shopping 
 - ESLint for code quality
 - PostCSS for CSS transformations
 
-## Installation 📦
-
-To get started with BitBolt, follow these steps:
 
 1. Clone the repository:
    ```bash
