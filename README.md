@@ -22,10 +22,6 @@ BitBolt is a modern e-commerce platform designed to provide a seamless shopping 
 - Tailwind CSS
 - Vite
 
-**Backend**:
-- Node.js
-- Express
-
 **Other Tools**:
 - ESLint for code quality
 - PostCSS for CSS transformations
