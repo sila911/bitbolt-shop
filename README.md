@@ -27,26 +27,6 @@ BitBolt is a modern e-commerce platform designed to provide a seamless shopping 
 - PostCSS for CSS transformations
 
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   ```
-
-2. Navigate to the project directory:
-   ```bash
-   cd bitbolt
-   ```
-
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
 ## Folder Structure 📂
 
 Here is the folder structure of the project:
