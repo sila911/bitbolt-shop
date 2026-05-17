@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { fetchAllProducts, fetchCategories, fetchProductsByCategory, searchProducts } from "./services/productApi";
-import { ProductGridSkeleton } from "./components/ProductSkeleton";
 
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -14,8 +14,15 @@ import ProductDetailModal from "./components/ProductDetailModal";
 import CartDrawer from "./components/CartDrawer";
 import FavoritesDrawer from "./components/FavoritesDrawer";
 import CheckoutInfoModal from "./components/CheckoutInfoModal";
-import StatusPopup from "./components/StatusPopup";
+import ToastManager from "./components/ToastManager";
 import Footer from "./components/Footer";
+import PromoBanner from "./components/PromoBanner";
+
+// Pages
+import LookbookPage from "./pages/LookbookPage";
+import ShopPage from "./pages/ShopPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import ExclusiveDropPage from "./pages/ExclusiveDropPage";
 
 export default function App() {
   const [products, setProducts] = useState([]);
@@ -31,13 +38,10 @@ export default function App() {
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
   const [isCheckoutInfoOpen, setIsCheckoutInfoOpen] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [popup, setPopup] = useState({
-    isOpen: false,
-    title: "",
-    message: "",
-    tone: "success",
-  });
+  const [toasts, setToasts] = useState([]);
   const categorySectionRef = useRef(null);
+  const navigate = useNavigate();
+
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem("bitbolt-theme");
     if (saved) return saved === "dark";
@@ -48,6 +52,15 @@ export default function App() {
     document.documentElement.classList.toggle("dark", isDarkMode);
     localStorage.setItem("bitbolt-theme", isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
+
+  const addToast = (title, message, tone = "success") => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, title, message, tone }]);
+  };
+
+  const removeToast = (id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
 
   // Initial Load: Categories only
   useEffect(() => {
@@ -113,12 +126,11 @@ export default function App() {
 
   const addToCart = (product) => {
     setCart([...cart, { ...product, cartId: Date.now() }]);
-    setPopup({
-      isOpen: true,
-      title: "Added to Cart",
-      message: `${product.title} has been added to your cart.`,
-      tone: "success",
-    });
+    addToast(
+      "Added to Cart",
+      `${product.title} has been added to your collection.`,
+      "success"
+    );
   };
 
   const toggleFavorite = (id) => {
@@ -147,13 +159,11 @@ export default function App() {
     const chatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
 
     if (!botToken || !chatId) {
-      setPopup({
-        isOpen: true,
-        title: "Telegram Config Missing",
-        message:
-          "Add VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID in your .env file.",
-        tone: "error",
-      });
+      addToast(
+        "Config Missing",
+        "Telegram API credentials not found in environment.",
+        "error"
+      );
       return;
     }
 
@@ -202,57 +212,33 @@ export default function App() {
         throw new Error(data.description || "Telegram API request failed");
       }
 
-      setPopup({
-        isOpen: true,
-        title: "Order Sent",
-        message: "Order sent to Telegram successfully!",
-        tone: "success",
-      });
+      addToast(
+        "Order Dispatched",
+        "Your request has been sent to our Telegram concierge.",
+        "success"
+      );
       setCart([]);
       setIsCheckoutInfoOpen(false);
       setIsCartOpen(false);
     } catch (error) {
-      setPopup({
-        isOpen: true,
-        title: "Send Failed",
-        message: `Failed to send order to Telegram: ${error.message}`,
-        tone: "error",
-      });
+      addToast(
+        "Dispatch Failed",
+        `Failed to send order: ${error.message}`,
+        "error"
+      );
     } finally {
       setIsCheckingOut(false);
     }
-  };
-
-  const openCheckoutInfo = () => {
-    if (cart.length === 0 || isCheckingOut) return;
-    setIsCheckoutInfoOpen(true);
   };
 
   useEffect(() => {
     AOS.refresh();
   }, [products.length]);
 
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300">
-      <Navbar
-        cartCount={cart.length}
-        favoritesCount={favorites.length}
-        searchTerm={searchTerm}
-        onSearchChange={(e) => setSearchTerm(e.target.value)}
-        searchSuggestions={searchTerm.trim() ? products.slice(0, 6) : []}
-        onSelectSuggestion={(product) => {
-          setDetailProduct(product);
-          setSearchTerm("");
-        }}
-        onSearchFocus={handleSearchFocus}
-        onOpenCart={() => setIsCartOpen(true)}
-        onOpenFavorites={() => setIsFavoritesOpen(true)}
-        isDarkMode={isDarkMode}
-        onToggleDarkMode={() => setIsDarkMode((prev) => !prev)}
-      />
-
+  const HomePage = () => (
+    <>
       <div data-aos="fade-up">
-        <Hero />
+        <Hero onShopClick={() => navigate("/shop")} onViewLookbook={() => navigate("/lookbook")} />
       </div>
 
       <div data-aos="fade-up" data-aos-delay="50">
@@ -262,7 +248,16 @@ export default function App() {
         }} />
       </div>
 
-      <div ref={categorySectionRef} data-aos="fade-up" data-aos-delay="80">
+      <div data-aos="fade-up" data-aos-delay="80">
+        <PromoBanner />
+      </div>
+
+      <div ref={categorySectionRef} data-aos="fade-up" data-aos-delay="100">
+        <div className="max-w-screen-2xl mx-auto px-6 md:px-12 mb-8">
+           <h2 className="text-3xl md:text-5xl font-black text-neutral-900 dark:text-white uppercase tracking-tighter">
+             Browse <span className="text-neutral-400">Collections</span>
+           </h2>
+        </div>
         <CategoryFilter
           categories={categories}
           selected={selectedCategory}
@@ -270,7 +265,7 @@ export default function App() {
         />
       </div>
 
-      <div data-aos="fade-up" data-aos-delay="100">
+      <div data-aos="fade-up" data-aos-delay="120">
         <CollectionsGrid onSelect={(slug) => {
           setSelectedCategory(slug);
           handleSearchFocus();
@@ -292,7 +287,7 @@ export default function App() {
             </div>
           </div>
         ) : (
-          <div data-aos="fade-up" data-aos-delay="120">
+          <div data-aos="fade-up" data-aos-delay="150">
             <ProductGrid
               products={products}
               isLoading={isLoading}
@@ -305,6 +300,37 @@ export default function App() {
           </div>
         )}
       </div>
+    </>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300">
+      <Navbar
+        cartCount={cart.length}
+        favoritesCount={favorites.length}
+        searchTerm={searchTerm}
+        onSearchChange={(e) => setSearchTerm(e.target.value)}
+        searchSuggestions={searchTerm.trim() ? products.slice(0, 6) : []}
+        onSelectSuggestion={(product) => {
+          setDetailProduct(product);
+          setSearchTerm("");
+        }}
+        onSearchFocus={handleSearchFocus}
+        onOpenCart={() => setIsCartOpen(true)}
+        onOpenFavorites={() => setIsFavoritesOpen(true)}
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={() => setIsDarkMode((prev) => !prev)}
+      />
+
+      <ToastManager toasts={toasts} removeToast={removeToast} />
+
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/lookbook" element={<LookbookPage />} />
+        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/exclusive-drop" element={<ExclusiveDropPage />} />
+      </Routes>
 
       <ProductDetailModal
         product={detailProduct}
@@ -323,7 +349,10 @@ export default function App() {
           setCart(cart.filter((item) => item.cartId !== cartId));
         }}
         subtotal={cart.reduce((a, b) => a + b.price, 0)}
-        onCheckout={openCheckoutInfo}
+        onCheckout={() => {
+          setIsCartOpen(false);
+          navigate("/checkout");
+        }}
         isCheckingOut={isCheckingOut}
       />
 
@@ -332,14 +361,6 @@ export default function App() {
         onClose={() => setIsCheckoutInfoOpen(false)}
         onSubmit={handleCheckout}
         isSubmitting={isCheckingOut}
-      />
-
-      <StatusPopup
-        isOpen={popup.isOpen}
-        title={popup.title}
-        message={popup.message}
-        tone={popup.tone}
-        onClose={() => setPopup((prev) => ({ ...prev, isOpen: false }))}
       />
 
       <FavoritesDrawer

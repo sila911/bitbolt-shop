@@ -16,7 +16,17 @@ export default function Navbar({
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const searchContainerRef = useRef(null);
+  const inputRef = useRef(null);
+
+  // Use state for tracking previous searchTerm to reset highlightedIndex during render safely
+  const [prevSearchTerm, setPrevSearchTerm] = useState(searchTerm);
+
+  if (prevSearchTerm !== searchTerm) {
+    setHighlightedIndex(-1);
+    setPrevSearchTerm(searchTerm);
+  }
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -31,19 +41,44 @@ export default function Navbar({
       }
     };
 
-    const handleEscape = (event) => {
+    const handleGlobalKeyDown = (event) => {
+      // Global shortcut: / to focus search
+      if (event.key === "/" && document.activeElement !== inputRef.current) {
+        event.preventDefault();
+        inputRef.current?.focus();
+      }
+
       if (event.key === "Escape") {
         setIsDropdownOpen(false);
+        inputRef.current?.blur();
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleEscape);
+    document.addEventListener("keydown", handleGlobalKeyDown);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleGlobalKeyDown);
     };
   }, []);
+
+  const handleInputKeyDown = (event) => {
+    if (!isDropdownOpen || !searchSuggestions?.length) return;
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setHighlightedIndex(prev => (prev < searchSuggestions.length - 1 ? prev + 1 : prev));
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setHighlightedIndex(prev => (prev > 0 ? prev - 1 : -1));
+    } else if (event.key === "Enter") {
+      if (highlightedIndex >= 0) {
+        event.preventDefault();
+        onSelectSuggestion(searchSuggestions[highlightedIndex]);
+        setIsDropdownOpen(false);
+      }
+    }
+  };
 
   const showDropdown = isDropdownOpen && searchTerm.trim() && searchSuggestions && searchSuggestions.length > 0;
 
@@ -68,6 +103,7 @@ export default function Navbar({
         <div className="hidden md:flex flex-1 max-w-xl relative group" ref={searchContainerRef}>
           <div className="relative w-full">
             <input
+              ref={inputRef}
               type="text"
               value={searchTerm}
               onChange={(e) => {
@@ -78,7 +114,8 @@ export default function Navbar({
                 onSearchFocus();
                 if (searchTerm.trim()) setIsDropdownOpen(true);
               }}
-              placeholder="Search our collection..."
+              onKeyDown={handleInputKeyDown}
+              placeholder="Search our collection... [/]"
               className="w-full bg-neutral-100 dark:bg-neutral-900 border-2 border-transparent focus:border-neutral-900 dark:focus:border-white py-3 px-6 pl-12 rounded-2xl outline-none transition-all duration-300 text-sm font-bold uppercase tracking-widest"
             />
             <Search
@@ -93,14 +130,16 @@ export default function Navbar({
               <div className="max-h-[400px] overflow-y-auto no-scrollbar">
                 <div className="p-4 grid gap-2">
                   <p className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-neutral-400">Quick Results</p>
-                  {searchSuggestions.map((product) => (
+                  {searchSuggestions.map((product, index) => (
                     <button
                       key={product.id}
                       onClick={() => {
                         onSelectSuggestion(product);
                         setIsDropdownOpen(false);
                       }}
-                      className="flex items-center gap-4 p-3 rounded-2xl hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors text-left group/item"
+                      className={`flex items-center gap-4 p-3 rounded-2xl transition-colors text-left group/item ${
+                        highlightedIndex === index ? "bg-neutral-100 dark:bg-neutral-800" : "hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                      }`}
                     >
                       <div className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex-shrink-0 overflow-hidden p-1">
                         <img src={product.thumbnail} alt={product.title} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
