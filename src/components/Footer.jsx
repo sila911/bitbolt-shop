@@ -36,7 +36,7 @@ export default function Footer() {
               <ul className="space-y-4">
                 {items.map(item => (
                   <li key={item}>
-                    <a href="#" className="text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider hover:text-neutral-400 transition-colors flex items-center group">
+                    <a href="#" className="text-sm font-bold text-neutral-900 dark:text-white tracking-wider hover:text-neutral-400 transition-colors flex items-center group">
                       {item}
                       <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity ml-1" />
                     </a>
@@ -48,13 +48,13 @@ export default function Footer() {
         </div>
 
         <div className="pt-12 border-t border-neutral-200 dark:border-neutral-800 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
+          <p className="text-[10px] font-black tracking-widest text-neutral-400">
             © 2026 BitBolt. All rights reserved.
           </p>
           <div className="flex gap-8">
-            <button className="text-[10px] font-black uppercase tracking-widest text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Privacy</button>
-            <button className="text-[10px] font-black uppercase tracking-widest text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Terms</button>
-            <button className="text-[10px] font-black uppercase tracking-widest text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Cookies</button>
+            <button className="text-[10px] font-black tracking-widest text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Privacy</button>
+            <button className="text-[10px] font-black tracking-widest text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Terms</button>
+            <button className="text-[10px] font-black tracking-widest text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Cookies</button>
           </div>
         </div>
       </div>

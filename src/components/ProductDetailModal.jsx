@@ -51,11 +51,11 @@ export default function ProductDetailModal({ product, isOpen, onClose, onAddToCa
         {/* Header */}
         <div className="px-8 py-6 flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800">
           <div className="flex items-center gap-2">
-             <span className="px-3 py-1 bg-neutral-100 dark:bg-neutral-800 rounded-full text-[10px] font-bold uppercase tracking-widest text-neutral-500">
+             <span className="px-3 py-1 bg-neutral-100 dark:bg-neutral-800 rounded-full text-[10px] font-bold text-neutral-500">
                {category.replace('-', ' ')}
              </span>
              {isLowStock && (
-               <span className="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full text-[10px] font-bold uppercase tracking-widest">
+               <span className="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full text-[10px] font-bold">
                  Limited Stock
                </span>
              )}
@@ -95,15 +95,15 @@ export default function ProductDetailModal({ product, isOpen, onClose, onAddToCa
               <div className="grid grid-cols-3 gap-4 mt-8">
                 <div className="flex flex-col items-center p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 text-center">
                    <Truck size={20} className="mb-2 text-neutral-400" />
-                   <span className="text-[10px] font-bold text-neutral-900 dark:text-neutral-100 uppercase leading-tight">{shippingInformation}</span>
+                   <span className="text-[10px] font-bold text-neutral-900 dark:text-neutral-100 leading-tight">{shippingInformation}</span>
                 </div>
                 <div className="flex flex-col items-center p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 text-center">
                    <ShieldCheck size={20} className="mb-2 text-neutral-400" />
-                   <span className="text-[10px] font-bold text-neutral-900 dark:text-neutral-100 uppercase leading-tight">{warrantyInformation}</span>
+                   <span className="text-[10px] font-bold text-neutral-900 dark:text-neutral-100 leading-tight">{warrantyInformation}</span>
                 </div>
                 <div className="flex flex-col items-center p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 text-center">
                    <RefreshCcw size={20} className="mb-2 text-neutral-400" />
-                   <span className="text-[10px] font-bold text-neutral-900 dark:text-neutral-100 uppercase leading-tight">{returnPolicy}</span>
+                   <span className="text-[10px] font-bold text-neutral-900 dark:text-neutral-100 leading-tight">{returnPolicy}</span>
                 </div>
               </div>
             </section>
@@ -111,8 +111,8 @@ export default function ProductDetailModal({ product, isOpen, onClose, onAddToCa
             {/* Content */}
             <section className="p-8 flex flex-col">
               <div className="mb-8">
-                <p className="text-sm font-bold text-neutral-400 uppercase tracking-widest mb-2">{brand}</p>
-                <h2 className="text-3xl md:text-5xl font-black text-neutral-900 dark:text-white uppercase tracking-tighter leading-none mb-4">{title}</h2>
+                <p className="text-sm font-bold text-neutral-400 mb-2">{brand}</p>
+                <h2 className="text-3xl md:text-5xl font-black text-neutral-900 dark:text-white tracking-tighter leading-none mb-4">{title}</h2>
                 
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1">
@@ -136,18 +136,18 @@ export default function ProductDetailModal({ product, isOpen, onClose, onAddToCa
 
               <div className="space-y-6 mb-10">
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-widest text-neutral-400 mb-2">Description</h4>
+                  <h4 className="text-xs font-black text-neutral-400 mb-2">Description</h4>
                   <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">{description}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-8 py-6 border-y border-neutral-100 dark:border-neutral-800">
                   <div>
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">Weight</h4>
-                    <p className="font-bold text-neutral-900 dark:text-white uppercase">{weight}g</p>
+                    <h4 className="text-[10px] font-black text-neutral-400 mb-2">Weight</h4>
+                    <p className="font-bold text-neutral-900 dark:text-white">{weight}g</p>
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">Dimensions</h4>
-                    <p className="font-bold text-neutral-900 dark:text-white uppercase">
+                    <h4 className="text-[10px] font-black text-neutral-400 mb-2">Dimensions</h4>
+                    <p className="font-bold text-neutral-900 dark:text-white">
                       {dimensions.width}x{dimensions.height}x{dimensions.depth} cm
                     </p>
                   </div>
@@ -156,10 +156,15 @@ export default function ProductDetailModal({ product, isOpen, onClose, onAddToCa
 
               <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4 mt-auto">
                 <button
-                  onClick={() => { onAddToCart(product); onClose() }}
-                  className="bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 py-5 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform active:scale-95 shadow-xl"
+                  onClick={(e) => { 
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onAddToCart(product); 
+                    onClose();
+                  }}
+                  className="bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 py-5 rounded-2xl font-black flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform active:scale-95 shadow-xl"
                 >
-                  <ShoppingBag size={20} />
+                  <ShoppingBag size={20} className="pointer-events-none" />
                   Add to Cart
                 </button>
                 <button
@@ -176,16 +181,16 @@ export default function ProductDetailModal({ product, isOpen, onClose, onAddToCa
 
               {/* Reviews Section */}
               <div className="mt-12 pt-12 border-t border-neutral-100 dark:border-neutral-800">
-                <h4 className="text-xs font-black uppercase tracking-widest text-neutral-400 mb-6">Customer Reviews</h4>
+                <h4 className="text-xs font-black text-neutral-400 mb-6">Customer Reviews</h4>
                 <div className="space-y-8">
                   {reviews.map((rev, idx) => (
                     <div key={idx} className="flex flex-col">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-black text-sm uppercase text-neutral-900 dark:text-white">{rev.reviewerName}</span>
+                        <span className="font-black text-sm text-neutral-900 dark:text-white">{rev.reviewerName}</span>
                         <div className="flex gap-1">{renderStars(rev.rating)}</div>
                       </div>
                       <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed italic">"{rev.comment}"</p>
-                      <span className="text-[10px] font-bold text-neutral-300 dark:text-neutral-700 mt-2 uppercase">
+                      <span className="text-[10px] font-bold text-neutral-300 dark:text-neutral-700 mt-2">
                         {new Date(rev.date).toLocaleDateString()}
                       </span>
                     </div>

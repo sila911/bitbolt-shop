@@ -12,12 +12,12 @@ export default function PromoBanner() {
         </div>
 
         <div className="relative h-full flex flex-col items-center justify-center text-center p-10">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-[10px] font-black tracking-[0.2em] text-white mb-8">
             <Zap size={14} className="text-yellow-400 fill-yellow-400" />
             Limited Time Offer
           </div>
           
-          <h2 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none mb-6">
+          <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-none mb-6">
             Exclusive<br />
             <span className="text-neutral-500">Drop 001</span>
           </h2>
@@ -26,7 +26,7 @@ export default function PromoBanner() {
             Our most ambitious collection yet. High-performance materials designed for the urban pioneer. Available for 48 hours only.
           </p>
 
-          <div className="flex items-center gap-4 bg-white text-neutral-900 px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs group-hover:scale-105 active:scale-95 transition-all shadow-2xl">
+          <div className="flex items-center gap-4 bg-white text-neutral-900 px-8 py-4 rounded-2xl font-black tracking-widest text-xs group-hover:scale-105 active:scale-95 transition-all shadow-2xl">
             Get Priority Access
             <ArrowRight size={18} />
           </div>
@@ -34,8 +34,8 @@ export default function PromoBanner() {
 
         {/* Decorative corner element */}
         <div className="absolute top-10 right-10 flex flex-col items-end gap-1">
-           <div className="text-[10px] font-black text-white uppercase tracking-widest opacity-40">Status</div>
-           <div className="text-xs font-black text-green-400 uppercase tracking-widest flex items-center gap-2">
+           <div className="text-[10px] font-black text-white tracking-widest opacity-40">Status</div>
+           <div className="text-xs font-black text-green-400 tracking-widest flex items-center gap-2">
              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-ping" />
              Live Now
            </div>

@@ -49,13 +49,29 @@ export default function App() {
   });
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDarkMode);
+    const root = window.document.documentElement;
+    if (isDarkMode) {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
     localStorage.setItem("bitbolt-theme", isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
 
-  const addToast = (title, message, tone = "success") => {
+  const addToast = (title, message, tone = "success", dedupeKey = null) => {
     const id = Date.now();
-    setToasts((prev) => [...prev, { id, title, message, tone }]);
+    
+    setToasts((prev) => {
+      // Deduplication Logic: Check if a toast with the same dedupeKey or title+message exists
+      const isDuplicate = prev.some(t => {
+        if (dedupeKey && t.dedupeKey === dedupeKey) return true;
+        if (!dedupeKey && t.title === title && typeof t.message === 'string' && t.message === message) return true;
+        return false;
+      });
+      
+      if (isDuplicate) return prev;
+      return [...prev, { id, title, message, tone, dedupeKey }];
+    });
   };
 
   const removeToast = (id) => {
@@ -125,13 +141,51 @@ export default function App() {
   }, []);
 
   const addToCart = (product) => {
-    setCart([...cart, { ...product, cartId: Date.now() }]);
-    addToast(
-      "Added to Cart",
-      `${product.title} has been added to your collection.`,
-      "success"
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === product.id);
+      if (existingItem) {
+        addToast(
+          "Quantity Updated",
+          <span>Increased <span className="text-neutral-900 dark:text-white font-bold">{product.title}</span> quantity in your collection.</span>,
+          "success",
+          `cart-update-${product.id}`
+        );
+        return prevCart.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+        }
+        addToast(
+        "Added to Cart",
+        <span><span className="text-white font-bold">{product.title}</span> has been added to your collection.</span>,
+        "success",
+        `cart-add-${product.id}`
+        );      return [...prevCart, { ...product, quantity: 1, cartId: Date.now() }];
+    });
+  };
+
+  const updateQuantity = (productId, delta) => {
+    setCart((prevCart) =>
+      prevCart
+        .map((item) =>
+          item.id === productId
+            ? { ...item, quantity: Math.max(0, item.quantity + delta) }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
     );
   };
+
+  const removeFromCart = (productId) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+    addToast("Item Removed", "Product removed from your collection.", "info", `cart-remove-${productId}`);
+  };
+
+  const clearCart = () => setCart([]);
+
+  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const toggleFavorite = (id) => {
     setFavorites((prev) =>
@@ -167,10 +221,10 @@ export default function App() {
       return;
     }
 
-    const total = cart.reduce((a, b) => a + b.price, 0);
+    const total = cartTotal;
     const orderLines = cart.map(
       (item, index) =>
-        `${index + 1}. ${item.title} - ${item.price.toLocaleString()}$`,
+        `${index + 1}. ${item.title} (x${item.quantity}) - ${(item.price * item.quantity).toLocaleString()}$`,
     );
     const message = [
       "New BitBolt Order!",
@@ -213,7 +267,7 @@ export default function App() {
       }
 
       addToast(
-        "Order Dispatched",
+        "Order Sent",
         "Your request has been sent to our Telegram concierge.",
         "success"
       );
@@ -222,8 +276,8 @@ export default function App() {
       setIsCartOpen(false);
     } catch (error) {
       addToast(
-        "Dispatch Failed",
-        `Failed to send order: ${error.message}`,
+        "Send Failed",
+        `Failed to send order to Telegram: ${error.message}`,
         "error"
       );
     } finally {
@@ -250,19 +304,6 @@ export default function App() {
 
       <div data-aos="fade-up" data-aos-delay="80">
         <PromoBanner />
-      </div>
-
-      <div ref={categorySectionRef} data-aos="fade-up" data-aos-delay="100">
-        <div className="max-w-screen-2xl mx-auto px-6 md:px-12 mb-8">
-           <h2 className="text-3xl md:text-5xl font-black text-neutral-900 dark:text-white uppercase tracking-tighter">
-             Browse <span className="text-neutral-400">Collections</span>
-           </h2>
-        </div>
-        <CategoryFilter
-          categories={categories}
-          selected={selectedCategory}
-          onSelect={setSelectedCategory}
-        />
       </div>
 
       <div data-aos="fade-up" data-aos-delay="120">
@@ -296,6 +337,10 @@ export default function App() {
               isFavorite={isFavorite}
               onOpenDetail={setDetailProduct}
               onClearFilters={clearFilters}
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
+              gridRef={categorySectionRef}
             />
           </div>
         )}
@@ -306,7 +351,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300">
       <Navbar
-        cartCount={cart.length}
+        cartCount={cartCount}
         favoritesCount={favorites.length}
         searchTerm={searchTerm}
         onSearchChange={(e) => setSearchTerm(e.target.value)}
@@ -328,7 +373,12 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/lookbook" element={<LookbookPage />} />
         <Route path="/shop" element={<ShopPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/checkout" element={<CheckoutPage 
+          cart={cart} 
+          total={cartTotal} 
+          clearCart={clearCart} 
+          addToast={addToast} 
+        />} />
         <Route path="/exclusive-drop" element={<ExclusiveDropPage />} />
       </Routes>
 
@@ -345,10 +395,9 @@ export default function App() {
         isOpen={isCartOpen}
         cart={cart}
         onClose={() => setIsCartOpen(false)}
-        onRemove={(cartId) => {
-          setCart(cart.filter((item) => item.cartId !== cartId));
-        }}
-        subtotal={cart.reduce((a, b) => a + b.price, 0)}
+        onUpdateQuantity={updateQuantity}
+        onRemove={removeFromCart}
+        subtotal={cartTotal}
         onCheckout={() => {
           setIsCartOpen(false);
           navigate("/checkout");

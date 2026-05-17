@@ -2,9 +2,9 @@ import { ArrowRight } from "lucide-react";
 
 const featured = [
   {
-    name: "Electronics",
-    slug: "electronics",
-    image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&q=80&w=1000",
+    name: "Laptops",
+    slug: "laptops",
+    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=1000",
     gridSpan: "md:col-span-2 md:row-span-2",
   },
   {
@@ -14,9 +14,9 @@ const featured = [
     gridSpan: "md:col-span-1 md:row-span-1",
   },
   {
-    name: "Accessories",
-    slug: "accessories",
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=1000",
+    name: "Sunglasses",
+    slug: "sunglasses",
+    image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=1000",
     gridSpan: "md:col-span-1 md:row-span-1",
   },
   {
@@ -31,10 +31,10 @@ export default function FeaturedCategories({ onSelect }) {
   return (
     <section className="max-w-screen-2xl mx-auto px-6 md:px-12 py-24">
       <div className="flex items-center justify-between mb-12">
-        <h2 className="text-3xl md:text-5xl font-black text-neutral-900 dark:text-white uppercase tracking-tighter">
+        <h2 className="text-3xl md:text-5xl font-black text-neutral-900 dark:text-white tracking-tight">
           Explore <span className="text-neutral-400">Categories</span>
         </h2>
-        <p className="text-xs font-black text-neutral-400 uppercase tracking-widest hidden md:block">
+        <p className="text-xs font-black text-neutral-400 hidden md:block">
           Curated for excellence
         </p>
       </div>
@@ -55,8 +55,8 @@ export default function FeaturedCategories({ onSelect }) {
             
             <div className="absolute bottom-8 left-8 right-8 flex items-end justify-between">
               <div>
-                <p className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">Collection</p>
-                <h3 className="text-2xl font-black text-white uppercase tracking-tighter">{cat.name}</h3>
+                <p className="text-[10px] font-black text-white/60 mb-1">Collection</p>
+                <h3 className="text-2xl font-black text-white tracking-tight">{cat.name}</h3>
               </div>
               <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-neutral-900 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
                 <ArrowRight size={20} />

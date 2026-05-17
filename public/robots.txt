@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bitbolt-shop.vercel.app/sitemap.xml

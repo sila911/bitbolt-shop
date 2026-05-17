@@ -94,7 +94,7 @@ export default function Navbar({
           <div className="w-10 h-10 bg-neutral-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-neutral-900 text-xl font-black group-hover:scale-110 transition-transform">
             B
           </div>
-          <h1 className="text-2xl font-black tracking-tighter text-neutral-900 dark:text-white uppercase">
+          <h1 className="text-2xl font-black tracking-tighter text-neutral-900 dark:text-white">
             Bit<span className="text-neutral-400">Bolt</span>
           </h1>
         </div>
@@ -116,7 +116,7 @@ export default function Navbar({
               }}
               onKeyDown={handleInputKeyDown}
               placeholder="Search our collection... [/]"
-              className="w-full bg-neutral-100 dark:bg-neutral-900 border-2 border-transparent focus:border-neutral-900 dark:focus:border-white py-3 px-6 pl-12 rounded-2xl outline-none transition-all duration-300 text-sm font-bold uppercase tracking-widest"
+              className="w-full bg-neutral-100 dark:bg-neutral-900 border-2 border-transparent focus:border-neutral-900 dark:focus:border-white py-3 px-6 pl-12 rounded-2xl outline-none transition-all duration-300 text-sm font-bold tracking-widest"
             />
             <Search
               className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-neutral-900 dark:group-focus-within:text-white transition-colors"
@@ -168,11 +168,14 @@ export default function Navbar({
         {/* Actions */}
         <div className="flex items-center gap-4 md:gap-8">
           <button
-            onClick={onToggleDarkMode}
-            className="p-3 bg-neutral-100 dark:bg-neutral-900 rounded-xl text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              onToggleDarkMode();
+            }}
+            className="p-3 bg-neutral-100 dark:bg-neutral-900 rounded-xl text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-all active:scale-90 z-[110]"
             aria-label="Toggle dark mode"
           >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            {isDarkMode ? <Sun size={20} className="pointer-events-none" /> : <Moon size={20} className="pointer-events-none" />}
           </button>
 
           <button

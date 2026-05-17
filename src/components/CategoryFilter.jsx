@@ -18,7 +18,7 @@ export default function CategoryFilter({ categories, selected, onSelect }) {
   ];
 
   return (
-    <div className="relative group max-w-screen-2xl mx-auto px-6 md:px-12 mb-12">
+    <div className="relative group w-full">
       <div className="flex items-center gap-4">
         <button
           onClick={() => scroll("left")}
@@ -35,7 +35,7 @@ export default function CategoryFilter({ categories, selected, onSelect }) {
             <button
               key={cat.slug}
               onClick={() => onSelect(cat.slug)}
-              className={`px-8 py-3 rounded-2xl text-xs font-black uppercase tracking-widest whitespace-nowrap transition-all duration-300 border-2 snap-start ${
+              className={`px-8 py-3 rounded-2xl text-xs font-black tracking-widest whitespace-nowrap transition-all duration-300 border-2 snap-start ${
                 selected === cat.slug
                   ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 border-neutral-900 dark:border-white shadow-xl scale-105"
                   : "bg-white dark:bg-neutral-900 text-neutral-400 border-neutral-100 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700"

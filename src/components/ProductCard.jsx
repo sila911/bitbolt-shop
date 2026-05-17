@@ -45,7 +45,7 @@ export default function ProductCard({ product, onAddToCart, onToggleFavorite, is
 
       <div className="pt-4 flex flex-col flex-1 min-w-0">
         <div className="flex items-center justify-between mb-1">
-          <p className="text-primary text-[10px] md:text-xs font-bold uppercase tracking-widest truncate max-w-[70%]">{category.replace('-', ' ')}</p>
+          <p className="text-primary text-[10px] md:text-xs font-bold tracking-widest truncate max-w-[70%]">{category.replace('-', ' ')}</p>
           <div className="flex items-center gap-1 flex-shrink-0">
             <Star size={12} className="fill-yellow-400 text-yellow-400" />
             <span className="text-[10px] md:text-xs font-black text-neutral-900 dark:text-neutral-100">{rating}</span>
@@ -53,7 +53,7 @@ export default function ProductCard({ product, onAddToCart, onToggleFavorite, is
         </div>
 
         <div className="h-12 mb-2">
-          <h3 className="font-black text-neutral-900 dark:text-neutral-100 text-sm md:text-base leading-snug line-clamp-2 group-hover:text-primary transition-colors uppercase tracking-tight">
+          <h3 className="font-black text-neutral-900 dark:text-neutral-100 text-sm md:text-base leading-snug line-clamp-2 group-hover:text-primary transition-colors tracking-tight">
             {brand && <span className="text-neutral-400 mr-1">{brand}</span>}
             {title}
           </h3>
@@ -72,17 +72,21 @@ export default function ProductCard({ product, onAddToCart, onToggleFavorite, is
           </div>
 
           <button
-            onClick={(e) => { e.stopPropagation(); onAddToCart(product) }}
+            onClick={(e) => { 
+              e.preventDefault();
+              e.stopPropagation(); 
+              onAddToCart(product);
+            }}
             className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 grid place-items-center shadow-lg hover:bg-primary dark:hover:bg-primary hover:text-white transition-all duration-300"
             aria-label={`Add ${title} to cart`}
           >
-            <ShoppingBag size={18} />
+            <ShoppingBag size={18} className="pointer-events-none" />
           </button>
         </div>
 
         <div className="h-4 mt-2">
           {isLowStock && (
-            <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest flex items-center gap-1">
+            <p className="text-[10px] font-bold text-red-500 tracking-widest flex items-center gap-1">
               <span className="h-1 w-1 rounded-full bg-current animate-pulse" />
               Only {stock} left
             </p>

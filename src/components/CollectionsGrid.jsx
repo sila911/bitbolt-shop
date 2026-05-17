@@ -9,17 +9,17 @@ const collections = [
     theme: "bg-orange-500"
   },
   {
-    title: "Pro Photography",
-    category: "accessories",
-    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=1000",
-    description: "High-end lenses and lighting gear.",
-    theme: "bg-blue-500"
+    title: "Luxury Timepieces",
+    category: "mens-watches",
+    image: "https://images.unsplash.com/photo-1524334228333-0f6db392f8a1?auto=format&fit=crop&q=80&w=1000",
+    description: "Precision-engineered watches to elevate your everyday style.",
+    theme: "bg-amber-500"
   },
   {
-    title: "Urban Tech",
-    category: "electronics",
-    image: "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=1000",
-    description: "Essential devices for the digital nomad.",
+    title: "Next-Gen Mobile",
+    category: "smartphones",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=1000",
+    description: "Flagship smartphones and pocket-sized powerhouses.",
     theme: "bg-purple-500"
   }
 ];
@@ -29,12 +29,12 @@ export default function CollectionsGrid({ onSelect }) {
     <section className="max-w-screen-2xl mx-auto px-6 md:px-12 py-12">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
         <div>
-          <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400 mb-2">Curated Series</h4>
-          <h2 className="text-3xl md:text-5xl font-black text-neutral-900 dark:text-white uppercase tracking-tighter leading-none">
+          <h4 className="text-[10px] font-black tracking-[0.3em] text-neutral-400 mb-2">Curated Series</h4>
+          <h2 className="text-3xl md:text-5xl font-black text-neutral-900 dark:text-white tracking-tight leading-none">
             Browse <span className="text-neutral-400">Collections</span>
           </h2>
         </div>
-        <button className="text-xs font-black uppercase tracking-widest text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white pb-1 hover:text-neutral-400 dark:hover:text-neutral-400 hover:border-neutral-400 transition-colors">
+        <button className="text-xs font-black tracking-widest text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white pb-1 hover:text-neutral-400 dark:hover:text-neutral-400 hover:border-neutral-400 transition-colors">
           View All Editions
         </button>
       </div>
@@ -61,17 +61,17 @@ export default function CollectionsGrid({ onSelect }) {
 
             {/* Content */}
             <div className="absolute bottom-10 left-10 right-10 flex flex-col items-start translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-              <span className="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[10px] font-black text-white uppercase tracking-widest mb-4">
+              <span className="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[10px] font-black text-white mb-4">
                 Collection Edition
               </span>
-              <h3 className="text-3xl font-black text-white uppercase tracking-tighter leading-none mb-3">
+              <h3 className="text-3xl font-black text-white tracking-tight leading-none mb-3">
                 {item.title}
               </h3>
               <p className="text-sm text-neutral-400 font-medium mb-6 opacity-0 group-hover:opacity-100 transition-opacity delay-100 line-clamp-2">
                 {item.description}
               </p>
               
-              <div className="flex items-center gap-3 text-white font-black text-[10px] uppercase tracking-widest group/btn">
+              <div className="flex items-center gap-3 text-white font-black text-[10px] tracking-widest group/btn">
                 <span>Explore Now</span>
                 <div className="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center group-hover/btn:bg-white group-hover/btn:text-neutral-950 transition-all">
                   <ArrowRight size={14} />

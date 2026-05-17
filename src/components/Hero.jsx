@@ -1,6 +1,6 @@
 import { ArrowRight, Sparkles } from 'lucide-react'
 
-export default function Hero() {
+export default function Hero({ onShopClick, onViewLookbook }) {
   return (
     <header className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-white dark:bg-neutral-950 pt-20">
       {/* Dynamic Background Elements */}
@@ -13,7 +13,7 @@ export default function Hero() {
         <div className="space-y-10 text-center lg:text-left">
           <div className="inline-flex items-center gap-2 bg-neutral-100 dark:bg-neutral-900 px-4 py-2 rounded-full text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-neutral-500">
             <Sparkles size={14} className="text-yellow-500" />
-            New Season Collection 2024
+            New Season Collection 2026
           </div>
           
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-black leading-[0.9] tracking-tighter text-neutral-900 dark:text-white uppercase">
@@ -26,11 +26,17 @@ export default function Hero() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-            <button className="w-full sm:w-auto bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-10 py-6 rounded-2xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-2xl">
+            <button 
+              onClick={onShopClick}
+              className="w-full sm:w-auto bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-10 py-6 rounded-2xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-2xl"
+            >
               Shop Collection
               <ArrowRight size={18} />
             </button>
-            <button className="w-full sm:w-auto bg-transparent border-2 border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white px-10 py-6 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-all">
+            <button 
+              onClick={onViewLookbook}
+              className="w-full sm:w-auto bg-transparent border-2 border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white px-10 py-6 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-all"
+            >
               View Lookbook
             </button>
           </div>
@@ -45,9 +51,9 @@ export default function Hero() {
         <div className="relative group">
           <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl bg-neutral-100 dark:bg-neutral-900">
             <img 
-              src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=1000" 
+              src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=1000" 
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
-              alt="Premium Product" 
+              alt="BitBolt Premium Streetwear Featured Item" 
             />
             <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             

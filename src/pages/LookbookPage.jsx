@@ -5,13 +5,13 @@ export default function LookbookPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 pt-32 pb-20 px-6">
       <div className="max-w-screen-2xl mx-auto">
-        <Link to="/" className="inline-flex items-center gap-2 text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors mb-12 uppercase text-xs font-black tracking-widest">
+        <Link to="/" className="inline-flex items-center gap-2 text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors mb-12 text-xs font-black tracking-widest">
           <ArrowLeft size={16} />
           Back to Shop
         </Link>
         
         <header className="mb-20">
-          <h1 className="text-6xl md:text-8xl font-black text-neutral-900 dark:text-white uppercase tracking-tighter leading-none mb-6">
+          <h1 className="text-6xl md:text-8xl font-black text-neutral-900 dark:text-white tracking-tighter leading-none mb-6">
             Season <span className="text-neutral-400">Lookbook</span>
           </h1>
           <p className="text-xl text-neutral-500 max-w-2xl leading-relaxed">
