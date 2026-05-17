@@ -7,6 +7,7 @@ import { ProductGridSkeleton } from "./components/ProductSkeleton";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import FeaturedCategories from "./components/FeaturedCategories";
+import CollectionsGrid from "./components/CollectionsGrid";
 import CategoryFilter from "./components/CategoryFilter";
 import ProductGrid from "./components/ProductGrid";
 import ProductDetailModal from "./components/ProductDetailModal";
@@ -267,6 +268,13 @@ export default function App() {
           selected={selectedCategory}
           onSelect={setSelectedCategory}
         />
+      </div>
+
+      <div data-aos="fade-up" data-aos-delay="100">
+        <CollectionsGrid onSelect={(slug) => {
+          setSelectedCategory(slug);
+          handleSearchFocus();
+        }} />
       </div>
 
       <div className="min-h-[600px] transition-all duration-300">
