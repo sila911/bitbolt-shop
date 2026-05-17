@@ -1,17 +1,62 @@
+import { MessageCircle, Send, Camera, Terminal, ArrowUpRight } from 'lucide-react'
+
 export default function Footer() {
+  const links = {
+    shop: ['New Arrivals', 'Best Sellers', 'Exclusive Drop', 'Lookbook'],
+    support: ['Shipping Policy', 'Return & Exchanges', 'Product Care', 'FAQs'],
+    company: ['Our Story', 'Careers', 'Terms of Service', 'Privacy Policy']
+  }
+
   return (
-    <footer className="glass border-t border-[rgba(123,97,255,0.16)] py-16">
-      <div className="max-w-screen-2xl mx-auto px-8 text-center">
-        <div className="flex justify-center items-center gap-3 mb-8">
-          <div className="w-10 h-10 brand-gradient rounded-3xl flex items-center justify-center text-white text-4xl font-bold">B</div>
-          <h1 className="logo-font text-4xl tracking-tighter text-[var(--color-text)]">BitBolt</h1>
+    <footer className="bg-neutral-100 dark:bg-neutral-900 pt-24 pb-12 border-t border-neutral-200 dark:border-neutral-800">
+      <div className="max-w-screen-2xl mx-auto px-6 md:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 mb-20">
+          {/* Brand Column */}
+          <div className="lg:col-span-2 space-y-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-neutral-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-neutral-900 text-xl font-black">B</div>
+              <h1 className="text-3xl font-black tracking-tighter text-neutral-900 dark:text-white uppercase">BitBolt</h1>
+            </div>
+            <p className="text-neutral-500 dark:text-neutral-400 max-w-sm leading-relaxed font-medium">
+              Redefining the digital shopping experience with premium gear and seamless delivery. Join the future of essential lifestyle.
+            </p>
+            <div className="flex gap-4">
+              {[MessageCircle, Send, Camera, Terminal].map((Icon, i) => (
+                <button key={i} className="w-10 h-10 rounded-full border border-neutral-300 dark:border-neutral-700 flex items-center justify-center text-neutral-400 hover:bg-neutral-900 hover:text-white dark:hover:bg-white dark:hover:text-neutral-900 transition-all">
+                  <Icon size={18} />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Links Columns */}
+          {Object.entries(links).map(([title, items]) => (
+            <div key={title}>
+              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 mb-6">{title}</h4>
+              <ul className="space-y-4">
+                {items.map(item => (
+                  <li key={item}>
+                    <a href="#" className="text-sm font-bold text-neutral-900 dark:text-white uppercase tracking-wider hover:text-neutral-400 transition-colors flex items-center group">
+                      {item}
+                      <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity ml-1" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-        <p className="text-[var(--color-muted)]">
-          © 2026 BitBolt • Instant digital delivery 
-        </p>
-        <p className="text-xs text-[var(--color-muted)] mt-8">
-          Built with React and Tailwind CSS by
-        </p>
+
+        <div className="pt-12 border-t border-neutral-200 dark:border-neutral-800 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
+            © 2026 BitBolt. All rights reserved.
+          </p>
+          <div className="flex gap-8">
+            <button className="text-[10px] font-black uppercase tracking-widest text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Privacy</button>
+            <button className="text-[10px] font-black uppercase tracking-widest text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Terms</button>
+            <button className="text-[10px] font-black uppercase tracking-widest text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Cookies</button>
+          </div>
+        </div>
       </div>
     </footer>
   )

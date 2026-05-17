@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { fetchAllProducts } from "./services/productApi";
+import { fetchAllProducts, fetchCategories, fetchProductsByCategory, searchProducts } from "./services/productApi";
 import { ProductGridSkeleton } from "./components/ProductSkeleton";
 
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import FeaturedCategories from "./components/FeaturedCategories";
 import CategoryFilter from "./components/CategoryFilter";
 import ProductGrid from "./components/ProductGrid";
 import ProductDetailModal from "./components/ProductDetailModal";
@@ -17,6 +18,7 @@ import Footer from "./components/Footer";
 
 export default function App() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
@@ -46,22 +48,58 @@ export default function App() {
     localStorage.setItem("bitbolt-theme", isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
 
+  // Initial Load: Categories only
   useEffect(() => {
-    const loadProducts = async () => {
+    const initLoad = async () => {
+      try {
+        const fetchedCategories = await fetchCategories();
+        setCategories(fetchedCategories);
+      } catch (err) {
+        console.error("Failed to load categories:", err);
+      }
+    };
+    initLoad();
+  }, []);
+
+  // Consolidated Data Fetching with Debounce & AbortController
+  useEffect(() => {
+    const controller = new AbortController();
+    
+    const loadData = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        const fetchedProducts = await fetchAllProducts();
-        setProducts(fetchedProducts);
+
+        let fetched;
+        if (searchTerm.trim()) {
+          fetched = await searchProducts(searchTerm, controller.signal);
+        } else if (selectedCategory !== "All") {
+          fetched = await fetchProductsByCategory(selectedCategory, controller.signal);
+        } else {
+          fetched = await fetchAllProducts(30, 0, controller.signal);
+        }
+
+        if (fetched !== null) {
+          setProducts(fetched);
+          setIsLoading(false);
+        }
       } catch (err) {
-        setError(err.message);
-        console.error("Error loading products:", err);
-      } finally {
-        setIsLoading(false);
+        if (err.name !== 'AbortError') {
+          setError(err.message);
+          setIsLoading(false);
+        }
       }
     };
-    loadProducts();
-  }, []);
+
+    const debounceTimer = setTimeout(() => {
+      loadData();
+    }, searchTerm.trim() ? 400 : 0); // Only debounce for search typing
+
+    return () => {
+      clearTimeout(debounceTimer);
+      controller.abort();
+    };
+  }, [searchTerm, selectedCategory]);
 
   useEffect(() => {
     AOS.init({
@@ -72,34 +110,16 @@ export default function App() {
     });
   }, []);
 
-  const filteredProducts = products.filter((p) => {
-    const q = searchTerm.trim().toLowerCase();
-    const matchesSearch =
-      q.length === 0 ||
-      p.name.toLowerCase().includes(q) ||
-      p.category.toLowerCase().includes(q);
-    const matchesCategory =
-      selectedCategory === "All" || p.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const addToCart = (product) => {
+    setCart([...cart, { ...product, cartId: Date.now() }]);
+    setPopup({
+      isOpen: true,
+      title: "Added to Cart",
+      message: `${product.title} has been added to your cart.`,
+      tone: "success",
+    });
+  };
 
-  const suggestionPool = [
-    ...new Set(products.flatMap((p) => [p.name, p.category])),
-  ];
-  const searchSuggestions =
-    searchTerm.trim().length > 0
-      ? products
-          .filter(
-            (p) =>
-              p.name.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
-              p.category
-                .toLowerCase()
-                .includes(searchTerm.trim().toLowerCase()),
-          )
-          .slice(0, 6)
-      : [];
-
-  const addToCart = (product) => setCart([...cart, product]);
   const toggleFavorite = (id) => {
     setFavorites((prev) =>
       prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id],
@@ -139,7 +159,7 @@ export default function App() {
     const total = cart.reduce((a, b) => a + b.price, 0);
     const orderLines = cart.map(
       (item, index) =>
-        `${index + 1}. ${item.name} - ${item.price.toLocaleString()}$`,
+        `${index + 1}. ${item.title} - ${item.price.toLocaleString()}$`,
     );
     const message = [
       "New BitBolt Order!",
@@ -209,20 +229,19 @@ export default function App() {
 
   useEffect(() => {
     AOS.refresh();
-  }, [filteredProducts.length]);
+  }, [products.length]);
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300">
       <Navbar
         cartCount={cart.length}
         favoritesCount={favorites.length}
         searchTerm={searchTerm}
         onSearchChange={(e) => setSearchTerm(e.target.value)}
-        searchSuggestions={searchSuggestions}
+        searchSuggestions={searchTerm.trim() ? products.slice(0, 6) : []}
         onSelectSuggestion={(product) => {
           setDetailProduct(product);
-          setIsFavoritesOpen(false);
-          setIsCartOpen(false);
+          setSearchTerm("");
         }}
         onSearchFocus={handleSearchFocus}
         onOpenCart={() => setIsCartOpen(true)}
@@ -235,81 +254,49 @@ export default function App() {
         <Hero />
       </div>
 
+      <div data-aos="fade-up" data-aos-delay="50">
+        <FeaturedCategories onSelect={(slug) => {
+          setSelectedCategory(slug);
+          handleSearchFocus();
+        }} />
+      </div>
+
       <div ref={categorySectionRef} data-aos="fade-up" data-aos-delay="80">
         <CategoryFilter
+          categories={categories}
           selected={selectedCategory}
           onSelect={setSelectedCategory}
         />
       </div>
 
-      {isLoading && (
-        <div
-          data-aos="fade-up"
-          data-aos-delay="120"
-          className="container mx-auto px-4 py-16"
-        >
-          <ProductGridSkeleton count={8} />
-        </div>
-      )}
-
-      {error && (
-        <div
-          data-aos="fade-up"
-          data-aos-delay="120"
-          className="container mx-auto px-4 py-16"
-        >
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-8">
-            <div className="flex items-start gap-4">
-              <div className="text-red-600 dark:text-red-400 text-3xl">⚠️</div>
-              <div className="flex-1">
-                <h3 className="text-red-800 dark:text-red-300 font-semibold text-lg mb-2">
-                  Failed to Load Products
-                </h3>
-                <p className="text-red-700 dark:text-red-400 text-sm mb-1">
-                  {error}
-                </p>
-                <p className="text-red-600 dark:text-red-500 text-xs mb-4">
-                  Check your internet connection and try again
-                </p>
-                <button
-                  onClick={() => {
-                    setError(null);
-                    setIsLoading(true);
-                    const loadProducts = async () => {
-                      try {
-                        const fetchedProducts = await fetchAllProducts();
-                        setProducts(fetchedProducts);
-                        setError(null);
-                      } catch (err) {
-                        setError(err.message);
-                      } finally {
-                        setIsLoading(false);
-                      }
-                    };
-                    loadProducts();
-                  }}
-                  className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white px-4 py-2 rounded text-sm font-medium transition"
-                >
-                  <span>🔄</span> Retry
-                </button>
-              </div>
+      <div className="min-h-[600px] transition-all duration-300">
+        {error ? (
+          <div className="container mx-auto px-4 py-16 text-center">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-12 max-w-2xl mx-auto">
+              <h3 className="text-xl font-bold text-red-800 dark:text-red-400 mb-4">Connection Error</h3>
+              <p className="text-red-600 dark:text-red-500 mb-6">{error}</p>
+              <button 
+                onClick={() => window.location.reload()}
+                className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+              >
+                Retry Connection
+              </button>
             </div>
           </div>
-        </div>
-      )}
-
-      {!isLoading && !error && (
-        <div data-aos="fade-up" data-aos-delay="120">
-          <ProductGrid
-            products={filteredProducts}
-            onAddToCart={addToCart}
-            onToggleFavorite={toggleFavorite}
-            isFavorite={isFavorite}
-            onOpenDetail={setDetailProduct}
-            onClearFilters={clearFilters}
-          />
-        </div>
-      )}
+        ) : (
+          <div data-aos="fade-up" data-aos-delay="120">
+            <ProductGrid
+              products={products}
+              isLoading={isLoading}
+              onAddToCart={addToCart}
+              onToggleFavorite={toggleFavorite}
+              isFavorite={isFavorite}
+              onOpenDetail={setDetailProduct}
+              onClearFilters={clearFilters}
+            />
+          </div>
+        )}
+      </div>
 
       <ProductDetailModal
         product={detailProduct}
@@ -324,10 +311,8 @@ export default function App() {
         isOpen={isCartOpen}
         cart={cart}
         onClose={() => setIsCartOpen(false)}
-        onRemove={(productId) => {
-          const itemIndex = cart.findIndex((item) => item.id === productId);
-          if (itemIndex === -1) return;
-          setCart(cart.filter((_, idx) => idx !== itemIndex));
+        onRemove={(cartId) => {
+          setCart(cart.filter((item) => item.cartId !== cartId));
         }}
         subtotal={cart.reduce((a, b) => a + b.price, 0)}
         onCheckout={openCheckoutInfo}
@@ -360,6 +345,6 @@ export default function App() {
       <div data-aos="fade-up" data-aos-delay="60">
         <Footer />
       </div>
-    </>
+    </div>
   );
 }

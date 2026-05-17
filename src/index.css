@@ -1,61 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-primary: #7b61ff;
-  --color-secondary: #ff8fcb;
-  --color-asset: #a9b8ff;
-  --color-text: #2f2454;
-  --color-muted: #7a6f9e;
-}
-
-.dark {
-  --color-primary: #a991ff;
-  --color-secondary: #ff9fcf;
-  --color-asset: #8ba2ff;
-  --color-text: #f1ecff;
-  --color-muted: #c8bbe8;
-}
-
 @layer base {
   html {
-    font-size: 87.5%;
+    scroll-behavior: smooth;
   }
 
   body {
     font-family: 'Inter', system-ui, sans-serif;
-    background: linear-gradient(135deg, #f3f0ff 0%, #fdeefe 52%, #eff6ff 100%);
-    color: var(--color-text);
-    transition: background 220ms ease, color 220ms ease;
-  }
-
-  .dark body {
-    background: linear-gradient(135deg, #1c1533 0%, #281d45 55%, #1d2542 100%);
+    @apply bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100;
   }
 }
 
-.logo-font {
-  font-family: 'Space Grotesk', sans-serif;
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
-/* Glassmorphism helper */
-.glass {
-  background: rgba(255, 255, 255, 0.62);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(123, 97, 255, 0.16);
-  box-shadow: 0 14px 35px rgba(126, 94, 190, 0.14);
-}
-
-.dark .glass {
-  background: rgba(28, 24, 50, 0.56);
-  border: 1px solid rgba(169, 145, 255, 0.22);
-  box-shadow: 0 14px 35px rgba(10, 10, 28, 0.35);
-}
-
-.brand-gradient {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+/* Custom Selection */
+::selection {
+  @apply bg-neutral-900 text-white dark:bg-white dark:text-neutral-900;
 }
