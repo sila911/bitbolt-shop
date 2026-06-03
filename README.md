@@ -67,5 +67,4 @@ src/
 └── main.jsx             # Entry Point
 ```
 
----
-Built with excellence by [Sila](https://github.com/sila911)
+ [Sila](https://github.com/sila911)
