@@ -8,7 +8,7 @@ BitBolt is a premium, high-performance e-commerce storefront built with **React 
 - **Real-World API**: Integrated with **DummyJSON API** for rich product data (discounts, reviews, stock, etc.).
 - **Premium UI/UX**: High-end dark mode aesthetic with smooth **AOS (Animate On Scroll)** transitions and micro-interactions.
 - **Advanced Search**:
-    - **Debounced Fetching**: Reduces API load with 400ms delay.
+    
     - **Quick Dropdown**: Floating results with thumbnails and prices.
     - **Keyboard Shortcuts**: Use `/` to focus, `Arrow keys` to navigate, `Enter` to select, and `Esc` to close.
 
