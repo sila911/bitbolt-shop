@@ -21,7 +21,6 @@ BitBolt is a premium, high-performance e-commerce storefront built with **React 
 ### Checkout & Connectivity
 - **Functional Checkout**: Modern multi-column checkout page with form validation and simulated transaction processing.
 - **Telegram Integration**: Direct order dispatching to Telegram via secure API integration.
-- **Toast Notifications**: Interactive, auto-dismissing toast system for adding items, order status, and error reporting.
 
 ## Tech Stack 🖥️
 
