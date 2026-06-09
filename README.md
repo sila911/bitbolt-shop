@@ -20,8 +20,6 @@ BitBolt is a premium, high-performance e-commerce storefront built with **React 
 
 ### Checkout & Connectivity
 - **Functional Checkout**: Modern multi-column checkout page with form validation and simulated transaction processing.
-- **Telegram Integration**: Direct order dispatching to Telegram via secure API integration.
-
 ## Tech Stack 🖥️
 
 - **Frontend**: React 19, Tailwind CSS, Lucide React (Icons), AOS (Animations)
