@@ -9,7 +9,7 @@ BitBolt is a premium, high-performance e-commerce storefront built with **React 
 ### Core Experience
 
 - **Real-World API**: Integrated with **DummyJSON API** for rich product data (discounts, reviews, stock, etc.).
-- **Premium UI/UX**: High-end dark mode aesthetic with smooth **AOS (Animate On Scroll)** transitions and micro-interactions.
+ **AOS (Animate On Scroll)** transitions and micro-interactions.
 - **Advanced Search**:
   - **Debounced Fetching**: Reduces API load with 400ms delay.
   - **Quick Dropdown**: Floating results with thumbnails and prices.
@@ -25,9 +25,6 @@ BitBolt is a premium, high-performance e-commerce storefront built with **React 
 ### Checkout & Connectivity
 
 - **Functional Checkout**: Modern multi-column checkout page with form validation and simulated transaction processing.
-- **Telegram Integration**: Direct order dispatching to Telegram via secure API integration.
-- **Toast Notifications**: Interactive, auto-dismissing toast system for adding items, order status, and error reporting.
-
 ## Tech Stack 🖥️
 
 - **Frontend**: React 19, Tailwind CSS, Lucide React (Icons), AOS (Animations)
@@ -75,6 +72,4 @@ src/
 └── main.jsx             # Entry Point
 ```
 
----
 
-Built with excellence by [Sila](https://github.com/sila911)
