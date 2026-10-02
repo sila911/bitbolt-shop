@@ -1,20 +1,32 @@
 import { X, ShoppingBag, Trash2, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import { useFavorites } from "../hooks/useFavorites";
+import { useCart } from "../hooks/useCart";
+
 export default function FavoritesDrawer({
   isOpen,
-  favorites,
+  favorites: propFavorites,
   onClose,
   onAddToCart,
   onRemoveFavorite,
 }) {
   const navigate = useNavigate();
-  if (!isOpen) return null;
+  const favCtx = useFavorites();
+  const cartCtx = useCart();
+
+  const favorites = propFavorites ?? favCtx?.favorites ?? [];
+  const isDrawerOpen = isOpen !== undefined ? isOpen : favCtx?.isFavoritesOpen;
+  const handleClose = onClose ?? (() => favCtx?.setIsFavoritesOpen?.(false));
+  const handleAddToCart = onAddToCart ?? cartCtx?.addToCart;
+  const handleRemoveFavorite = onRemoveFavorite ?? favCtx?.toggleFavorite;
+
+  if (!isDrawerOpen) return null;
 
   return (
     <div
       className="fixed inset-0 bg-neutral-950/40 backdrop-blur-md z-[200] flex justify-end transition-all duration-300"
-      onClick={onClose}
+      onClick={handleClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
@@ -34,7 +46,7 @@ export default function FavoritesDrawer({
             </p>
           </div>
           <button 
-            onClick={onClose} 
+            onClick={handleClose} 
             className="p-2.5 bg-neutral-100 dark:bg-neutral-900 rounded-full text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
             aria-label="Close wishlist"
           >
@@ -53,7 +65,7 @@ export default function FavoritesDrawer({
               <p className="text-xs text-neutral-400 mt-1 mb-6">Tap the heart on any product to save it here.</p>
               <button 
                 onClick={() => {
-                  onClose();
+                  handleClose();
                   navigate("/shop");
                 }}
                 className="bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity"
@@ -70,7 +82,7 @@ export default function FavoritesDrawer({
                 >
                   <div
                     onClick={() => {
-                      onClose();
+                      handleClose();
                       navigate(`/product/${item.id}`);
                     }}
                     className="w-18 h-18 sm:w-20 sm:h-20 flex-shrink-0 bg-white dark:bg-neutral-800 rounded-xl overflow-hidden p-1.5 cursor-pointer"
@@ -86,7 +98,7 @@ export default function FavoritesDrawer({
                     <div className="flex justify-between items-start mb-1">
                       <div
                         onClick={() => {
-                          onClose();
+                          handleClose();
                           navigate(`/product/${item.id}`);
                         }}
                         className="min-w-0 cursor-pointer"
@@ -99,7 +111,7 @@ export default function FavoritesDrawer({
                         </p>
                       </div>
                       <button
-                        onClick={() => onRemoveFavorite && onRemoveFavorite(item.id)}
+                        onClick={() => handleRemoveFavorite(item.id)}
                         className="text-neutral-300 hover:text-red-500 transition-colors p-1"
                         aria-label="Remove from favorites"
                       >
@@ -112,7 +124,7 @@ export default function FavoritesDrawer({
                         ${item.price?.toLocaleString()}
                       </p>
                       <button
-                        onClick={() => onAddToCart && onAddToCart(item)}
+                        onClick={() => handleAddToCart(item)}
                         className="h-8 w-8 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 grid place-items-center shadow-sm hover:opacity-90 transition-opacity"
                         aria-label="Add to cart"
                       >

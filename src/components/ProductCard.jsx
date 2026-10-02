@@ -1,19 +1,27 @@
-import { Heart, ShoppingBag, Star } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Heart, ShoppingBag, Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../hooks/useCart";
+import { useFavorites } from "../hooks/useFavorites";
+import { formatCategoryName, calculateOriginalPrice } from "../utils/formatters";
 
-export default function ProductCard({ product, onAddToCart, onToggleFavorite, isFavorite, onOpenDetail }) {
+export default function ProductCard({
+  product,
+  onAddToCart,
+  onToggleFavorite,
+  isFavorite: propIsFavorite,
+  onOpenDetail,
+}) {
   const navigate = useNavigate();
-  const { 
-    id, 
-    title, 
-    category, 
-    price, 
-    discountPercentage, 
-    rating, 
-    thumbnail
-  } = product;
+  const cartCtx = useCart();
+  const favCtx = useFavorites();
 
-  const originalPrice = Math.round(price / (1 - discountPercentage / 100));
+  const { id, title, category, price, discountPercentage = 0, rating, thumbnail } = product;
+
+  const handleAddToCart = onAddToCart ?? cartCtx?.addToCart;
+  const handleToggleFavorite = onToggleFavorite ?? favCtx?.toggleFavorite;
+  const isFavorite = propIsFavorite !== undefined ? propIsFavorite : favCtx?.isFavorite?.(id);
+
+  const originalPrice = calculateOriginalPrice(price, discountPercentage);
 
   const handleCardClick = () => {
     if (onOpenDetail) {
@@ -30,12 +38,12 @@ export default function ProductCard({ product, onAddToCart, onToggleFavorite, is
     >
       <div>
         <div className="relative aspect-square rounded-xl overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/50 flex-shrink-0">
-          <img 
-            src={thumbnail} 
-            alt={title} 
-            className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal group-hover:scale-105 transition-transform duration-300" 
+          <img
+            src={thumbnail}
+            alt={title}
+            className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal group-hover:scale-105 transition-transform duration-300"
           />
-          
+
           {discountPercentage > 0 && (
             <span className="absolute top-2 left-2 bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-[10px] font-bold px-2 py-0.5 rounded-md">
               -{Math.round(discountPercentage)}%
@@ -43,18 +51,21 @@ export default function ProductCard({ product, onAddToCart, onToggleFavorite, is
           )}
 
           <button
-            onClick={(e) => { e.stopPropagation(); onToggleFavorite(id) }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggleFavorite?.(product);
+            }}
             className="absolute top-2 right-2 h-8 w-8 grid place-items-center bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm rounded-full shadow-sm hover:scale-110 active:scale-95 transition-transform"
-            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
           >
-            <Heart size={15} className={isFavorite ? 'fill-red-500 text-red-500' : 'text-neutral-400'} />
+            <Heart size={15} className={isFavorite ? "fill-red-500 text-red-500" : "text-neutral-400"} />
           </button>
         </div>
 
         <div className="pt-3">
           <div className="flex items-center justify-between mb-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 truncate max-w-[70%]">
-              {category.replace('-', ' ')}
+              {formatCategoryName(category)}
             </span>
             <div className="flex items-center gap-1 text-[11px] font-bold text-neutral-600 dark:text-neutral-300">
               <Star size={11} className="fill-amber-400 text-amber-400" />
@@ -81,10 +92,10 @@ export default function ProductCard({ product, onAddToCart, onToggleFavorite, is
         </div>
 
         <button
-          onClick={(e) => { 
+          onClick={(e) => {
             e.preventDefault();
-            e.stopPropagation(); 
-            onAddToCart(product);
+            e.stopPropagation();
+            handleAddToCart?.(product);
           }}
           className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 grid place-items-center hover:opacity-90 active:scale-90 transition-all shadow-sm"
           aria-label={`Add ${title} to cart`}
@@ -93,5 +104,5 @@ export default function ProductCard({ product, onAddToCart, onToggleFavorite, is
         </button>
       </div>
     </article>
-  )
+  );
 }

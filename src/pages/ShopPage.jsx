@@ -1,13 +1,21 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, SlidersHorizontal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { fetchAllProducts, fetchCategories, fetchProductsByCategory } from "../services/productApi";
+import { fetchAllProducts, fetchCategories, fetchProductsByCategory } from "../api";
 import ProductCard from "../components/ProductCard";
 import CategoryFilter from "../components/CategoryFilter";
 import { ProductGridSkeleton } from "../components/ProductSkeleton";
+import { useCart } from "../hooks/useCart";
+import { useFavorites } from "../hooks/useFavorites";
 
 export default function ShopPage({ onAddToCart, onToggleFavorite, isFavorite }) {
   const navigate = useNavigate();
+  const cartCtx = useCart();
+  const favCtx = useFavorites();
+
+  const handleAddToCart = onAddToCart ?? cartCtx?.addToCart;
+  const handleToggleFavorite = onToggleFavorite ?? favCtx?.toggleFavorite;
+  const checkIsFavorite = isFavorite ?? ((id) => favCtx?.isFavorite?.(id));
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -137,9 +145,9 @@ export default function ShopPage({ onAddToCart, onToggleFavorite, isFavorite }) 
               <ProductCard
                 key={product.id}
                 product={product}
-                onAddToCart={onAddToCart}
-                onToggleFavorite={onToggleFavorite}
-                isFavorite={isFavorite?.(product.id)}
+                onAddToCart={handleAddToCart}
+                onToggleFavorite={handleToggleFavorite}
+                isFavorite={checkIsFavorite(product.id)}
               />
             ))}
           </div>

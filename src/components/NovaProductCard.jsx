@@ -1,14 +1,21 @@
 import { Heart, ShoppingBag, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../hooks/useCart";
+import { useFavorites } from "../hooks/useFavorites";
 
 export default function NovaProductCard({
   product,
   onAddToCart,
   onToggleFavorite,
   isFavorite,
-  variant = "deal" // 'deal' or 'recommended'
+  variant = "deal",
 }) {
   const navigate = useNavigate();
+  const cartCtx = useCart();
+  const favCtx = useFavorites();
+
+  const handleAddToCart = onAddToCart ?? cartCtx?.addToCart;
+  const handleToggleFavorite = onToggleFavorite ?? favCtx?.toggleFavorite;
 
   const {
     id,
@@ -18,13 +25,19 @@ export default function NovaProductCard({
     price,
     discountPercentage = 0,
     rating = 4.8,
-    thumbnail
+    thumbnail,
   } = product;
 
-  const originalPrice = discountPercentage > 0 ? Math.round(price / (1 - discountPercentage / 100)) : price;
-  const favorited = isFavorite?.(id);
+  const originalPrice =
+    discountPercentage > 0 ? Math.round(price / (1 - discountPercentage / 100)) : price;
 
-  // Variant color swatches for recommended style
+  const favorited =
+    isFavorite !== undefined
+      ? typeof isFavorite === "function"
+        ? isFavorite(id)
+        : isFavorite
+      : favCtx?.isFavorite?.(id);
+
   const swatches = ["bg-neutral-800", "bg-amber-700", "bg-neutral-300"];
 
   return (
@@ -33,7 +46,6 @@ export default function NovaProductCard({
       className="bg-white dark:bg-neutral-900 border border-neutral-200/70 dark:border-neutral-800 rounded-3xl p-3 sm:p-3.5 cursor-pointer group hover:shadow-xl hover:shadow-purple-500/5 transition-all duration-300 flex flex-col justify-between"
     >
       <div>
-        {/* Thumbnail Image Container */}
         <div className="relative aspect-square w-full rounded-2xl bg-neutral-100/70 dark:bg-neutral-800/60 overflow-hidden flex items-center justify-center p-3">
           <img
             src={thumbnail}
@@ -41,18 +53,16 @@ export default function NovaProductCard({
             className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal group-hover:scale-105 transition-transform duration-300"
           />
 
-          {/* Discount Badge */}
           {discountPercentage > 0 && (
             <span className="absolute top-2.5 left-2.5 bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">
               -{Math.round(discountPercentage)}%
             </span>
           )}
 
-          {/* Wishlist Heart Button */}
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onToggleFavorite?.(product);
+              handleToggleFavorite?.(product);
             }}
             className="absolute top-2.5 right-2.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/90 dark:bg-neutral-900/90 shadow-sm flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
             aria-label={favorited ? "Remove from wishlist" : "Add to wishlist"}
@@ -64,7 +74,6 @@ export default function NovaProductCard({
           </button>
         </div>
 
-        {/* Info */}
         <div className="pt-3 space-y-0.5">
           <h4 className="text-xs sm:text-sm font-bold text-neutral-900 dark:text-white truncate group-hover:text-[#6c5ce7] transition-colors">
             {title}
@@ -75,7 +84,6 @@ export default function NovaProductCard({
         </div>
       </div>
 
-      {/* Pricing & Footer Actions */}
       <div className="pt-3 mt-2 border-t border-neutral-100 dark:border-neutral-800/80">
         <div className="flex items-baseline gap-2 mb-2">
           <span className="text-sm sm:text-base font-black text-neutral-900 dark:text-white">
@@ -90,7 +98,6 @@ export default function NovaProductCard({
 
         {variant === "recommended" ? (
           <div className="flex items-center justify-between">
-            {/* Color Swatch Dots */}
             <div className="flex items-center gap-1.5">
               {swatches.map((color, i) => (
                 <span
@@ -100,11 +107,10 @@ export default function NovaProductCard({
               ))}
             </div>
 
-            {/* Purple Circular Add-to-Cart Button */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onAddToCart?.(product);
+                handleAddToCart?.(product);
               }}
               className="w-8 h-8 rounded-full bg-[#6c5ce7] hover:bg-[#5b4cc4] text-white flex items-center justify-center shadow-md shadow-purple-500/20 active:scale-90 transition-all"
               aria-label={`Add ${title} to bag`}
@@ -114,18 +120,16 @@ export default function NovaProductCard({
           </div>
         ) : (
           <div className="flex items-center justify-between">
-            {/* Rating */}
             <div className="flex items-center gap-1 text-[11px] font-bold text-neutral-700 dark:text-neutral-300">
               <Star size={12} className="fill-amber-400 text-amber-400" />
               <span>{rating}</span>
               <span className="text-[10px] text-neutral-400 font-normal">(124)</span>
             </div>
 
-            {/* Quick Add Button */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onAddToCart?.(product);
+                handleAddToCart?.(product);
               }}
               className="p-1.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 hover:text-[#6c5ce7] transition-colors"
               aria-label={`Add ${title} to bag`}

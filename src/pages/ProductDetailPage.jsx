@@ -14,12 +14,28 @@ import {
   Plus, 
   Share2 
 } from "lucide-react";
-import { fetchProductById, fetchProductsByCategory } from "../services/productApi";
+import { fetchProductById, fetchProductsByCategory } from "../api";
 import ProductCard from "../components/ProductCard";
+import { useCart } from "../hooks/useCart";
+import { useFavorites } from "../hooks/useFavorites";
+import { useToast } from "../hooks/useToast";
 
-export default function ProductDetailPage({ onAddToCart, onToggleFavorite, isFavorite, addToast }) {
+export default function ProductDetailPage({
+  onAddToCart,
+  onToggleFavorite,
+  isFavorite,
+  addToast,
+}) {
   const { id } = useParams();
   const navigate = useNavigate();
+  const cartCtx = useCart();
+  const favCtx = useFavorites();
+  const toastCtx = useToast();
+
+  const handleAddToCart = onAddToCart ?? cartCtx?.addToCart;
+  const handleToggleFavorite = onToggleFavorite ?? favCtx?.toggleFavorite;
+  const checkIsFavorite = isFavorite ?? ((productId) => favCtx?.isFavorite?.(productId));
+  const notify = addToast ?? toastCtx?.addToast;
 
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -73,7 +89,7 @@ export default function ProductDetailPage({ onAddToCart, onToggleFavorite, isFav
     if (navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href);
       setCopied(true);
-      addToast?.("Link Copied", "Product URL copied to clipboard.", "info");
+      notify?.("Link Copied", "Product URL copied to clipboard.", "info");
       setTimeout(() => setCopied(false), 2000);
     }
   };
@@ -81,7 +97,7 @@ export default function ProductDetailPage({ onAddToCart, onToggleFavorite, isFav
   const handleAdd = () => {
     if (!product) return;
     for (let i = 0; i < quantity; i++) {
-      onAddToCart(product);
+      handleAddToCart(product);
     }
   };
 
@@ -146,7 +162,7 @@ export default function ProductDetailPage({ onAddToCart, onToggleFavorite, isFav
 
   const originalPrice = discountPercentage > 0 ? Math.round(price / (1 - discountPercentage / 100)) : price;
   const gallery = images && images.length > 0 ? images : [thumbnail];
-  const favorited = isFavorite?.(product.id);
+  const favorited = checkIsFavorite(product.id);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 pt-24 md:pt-28 pb-24 text-neutral-900 dark:text-neutral-100">
@@ -445,9 +461,9 @@ export default function ProductDetailPage({ onAddToCart, onToggleFavorite, isFav
                 <ProductCard
                   key={p.id}
                   product={p}
-                  onAddToCart={onAddToCart}
-                  onToggleFavorite={onToggleFavorite}
-                  isFavorite={isFavorite?.(p.id)}
+                  onAddToCart={handleAddToCart}
+                  onToggleFavorite={handleToggleFavorite}
+                  isFavorite={checkIsFavorite(p.id)}
                 />
               ))}
             </div>

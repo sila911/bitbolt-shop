@@ -1,12 +1,36 @@
 import { X, Trash2, CreditCard, ShoppingBag, ArrowRight, Minus, Plus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-export default function CartDrawer({ isOpen, cart, onClose, onUpdateQuantity, onRemove, subtotal, onCheckout, isCheckingOut }) {
+import { useCart } from '../hooks/useCart';
+
+export default function CartDrawer({
+  isOpen,
+  cart: propCart,
+  onClose,
+  onUpdateQuantity,
+  onRemove,
+  subtotal: propSubtotal,
+  onCheckout,
+  isCheckingOut,
+}) {
   const navigate = useNavigate();
-  if (!isOpen) return null;
+  const cartCtx = useCart();
+
+  const cart = propCart ?? cartCtx?.cart ?? [];
+  const subtotal = propSubtotal ?? cartCtx?.cartTotal ?? 0;
+  const handleUpdate = onUpdateQuantity ?? cartCtx?.updateQuantity;
+  const handleRemove = onRemove ?? cartCtx?.removeFromCart;
+  const isDrawerOpen = isOpen !== undefined ? isOpen : cartCtx?.isCartOpen;
+  const handleClose = onClose ?? (() => cartCtx?.setIsCartOpen?.(false));
+  const handleCheckout = onCheckout ?? (() => {
+    handleClose();
+    navigate('/checkout');
+  });
+
+  if (!isDrawerOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-neutral-950/40 backdrop-blur-md z-[200] flex justify-end transition-all duration-300" onClick={onClose}>
+    <div className="fixed inset-0 bg-neutral-950/40 backdrop-blur-md z-[200] flex justify-end transition-all duration-300" onClick={handleClose}>
       <div 
         onClick={e => e.stopPropagation()}
         className="bg-white dark:bg-neutral-950 w-full max-w-full sm:max-w-md h-full flex flex-col shadow-2xl relative"
@@ -18,7 +42,7 @@ export default function CartDrawer({ isOpen, cart, onClose, onUpdateQuantity, on
             <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">{cart.length} Items</p>
           </div>
           <button 
-            onClick={onClose} 
+            onClick={handleClose} 
             className="p-2.5 bg-neutral-100 dark:bg-neutral-900 rounded-full text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
             aria-label="Close bag"
           >
@@ -37,7 +61,7 @@ export default function CartDrawer({ isOpen, cart, onClose, onUpdateQuantity, on
               <p className="text-xs text-neutral-400 mt-1 mb-6">Explore the collection and add items to your bag.</p>
               <button 
                 onClick={() => {
-                  onClose();
+                  handleClose();
                   navigate("/shop");
                 }}
                 className="bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity"
@@ -53,7 +77,7 @@ export default function CartDrawer({ isOpen, cart, onClose, onUpdateQuantity, on
               >
                 <div 
                   onClick={() => {
-                    onClose();
+                    handleClose();
                     navigate(`/product/${item.id}`);
                   }}
                   className="w-18 h-18 sm:w-20 sm:h-20 flex-shrink-0 bg-white dark:bg-neutral-800 rounded-xl overflow-hidden p-1.5 cursor-pointer"
@@ -65,7 +89,7 @@ export default function CartDrawer({ isOpen, cart, onClose, onUpdateQuantity, on
                   <div className="flex justify-between items-start mb-1">
                     <div 
                       onClick={() => {
-                        onClose();
+                        handleClose();
                         navigate(`/product/${item.id}`);
                       }}
                       className="min-w-0 cursor-pointer"
@@ -74,7 +98,7 @@ export default function CartDrawer({ isOpen, cart, onClose, onUpdateQuantity, on
                       <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider truncate">{item.brand || item.category?.replace('-', ' ')}</p>
                     </div>
                     <button
-                      onClick={() => onRemove(item.id)}
+                      onClick={() => handleRemove(item.id)}
                       className="text-neutral-300 hover:text-red-500 transition-colors p-1"
                       aria-label="Remove item"
                     >
@@ -85,7 +109,7 @@ export default function CartDrawer({ isOpen, cart, onClose, onUpdateQuantity, on
                   <div className="mt-auto flex justify-between items-end pt-1">
                     <div className="flex items-center bg-white dark:bg-neutral-800 rounded-lg p-0.5 border border-neutral-200/60 dark:border-neutral-700">
                       <button 
-                        onClick={() => onUpdateQuantity(item.id, -1)}
+                        onClick={() => handleUpdate(item.id, -1)}
                         className="w-6 h-6 rounded flex items-center justify-center hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-500 transition-colors"
                         aria-label="Decrease quantity"
                       >
@@ -93,7 +117,7 @@ export default function CartDrawer({ isOpen, cart, onClose, onUpdateQuantity, on
                       </button>
                       <span className="w-6 text-center text-xs font-bold">{item.quantity}</span>
                       <button 
-                        onClick={() => onUpdateQuantity(item.id, 1)}
+                        onClick={() => handleUpdate(item.id, 1)}
                         className="w-6 h-6 rounded flex items-center justify-center hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-500 transition-colors"
                         aria-label="Increase quantity"
                       >
@@ -130,7 +154,7 @@ export default function CartDrawer({ isOpen, cart, onClose, onUpdateQuantity, on
             </div>
 
             <button
-              onClick={onCheckout}
+              onClick={handleCheckout}
               disabled={isCheckingOut}
               className="w-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-md disabled:opacity-50"
             >
