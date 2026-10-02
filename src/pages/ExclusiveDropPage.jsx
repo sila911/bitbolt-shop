@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "iconsax-react";
 import { Link } from "react-router-dom";
 
 export default function ExclusiveDropPage() {

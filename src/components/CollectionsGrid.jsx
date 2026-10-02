@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "iconsax-react";
 
 const collections = [
   {
@@ -26,56 +26,36 @@ const collections = [
 
 export default function CollectionsGrid({ onSelect }) {
   return (
-    <section className="max-w-screen-2xl mx-auto px-6 md:px-12 py-12">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-        <div>
-          <h4 className="text-[10px] font-black tracking-[0.3em] text-neutral-400 mb-2">Curated Series</h4>
-          <h2 className="text-3xl md:text-5xl font-black text-neutral-900 dark:text-white tracking-tight leading-none">
-            Browse <span className="text-neutral-400">Collections</span>
-          </h2>
-        </div>
-        <button className="text-xs font-black tracking-widest text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white pb-1 hover:text-neutral-400 dark:hover:text-neutral-400 hover:border-neutral-400 transition-colors">
-          View All Editions
-        </button>
+    <section className="max-w-screen-2xl mx-auto px-6 md:px-12 py-10">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white tracking-tight uppercase">
+          Collections
+        </h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {collections.map((item, idx) => (
           <div 
             key={idx}
             onClick={() => onSelect(item.category)}
-            className="group relative h-[500px] rounded-[2.5rem] overflow-hidden cursor-pointer bg-neutral-100 dark:bg-neutral-900 transition-all duration-500"
+            className="group relative h-[380px] rounded-3xl overflow-hidden cursor-pointer bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80"
           >
-            {/* Image with zoom effect */}
             <img 
               src={item.image} 
               alt={item.title}
-              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90 dark:opacity-60 group-hover:opacity-100"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
             
-            {/* Overlay Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
-            
-            {/* Floating indicator */}
-            <div className={`absolute top-8 left-8 w-2 h-2 rounded-full ${item.theme} animate-pulse`} />
+            <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/85 via-neutral-950/20 to-transparent" />
 
-            {/* Content */}
-            <div className="absolute bottom-10 left-10 right-10 flex flex-col items-start translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-              <span className="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[10px] font-black text-white mb-4">
-                Collection Edition
-              </span>
-              <h3 className="text-3xl font-black text-white tracking-tight leading-none mb-3">
-                {item.title}
-              </h3>
-              <p className="text-sm text-neutral-400 font-medium mb-6 opacity-0 group-hover:opacity-100 transition-opacity delay-100 line-clamp-2">
-                {item.description}
-              </p>
-              
-              <div className="flex items-center gap-3 text-white font-black text-[10px] tracking-widest group/btn">
-                <span>Explore Now</span>
-                <div className="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center group-hover/btn:bg-white group-hover/btn:text-neutral-950 transition-all">
-                  <ArrowRight size={14} />
-                </div>
+            <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-white tracking-tight">
+                  {item.title}
+                </h3>
+              </div>
+              <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-white group-hover:text-neutral-950 transition-colors">
+                <ArrowRight size={15} />
               </div>
             </div>
           </div>

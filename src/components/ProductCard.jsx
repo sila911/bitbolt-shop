@@ -1,98 +1,108 @@
-import { Heart, ShoppingBag, Star } from 'lucide-react'
+import { Heart, ShoppingBag, Star1 as Star } from "iconsax-react";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../hooks/useCart";
+import { useFavorites } from "../hooks/useFavorites";
+import { formatCategoryName, calculateOriginalPrice } from "../utils/formatters";
 
-export default function ProductCard({ product, onAddToCart, onToggleFavorite, isFavorite, onOpenDetail }) {
-  const { 
-    id, 
-    title, 
-    category, 
-    price, 
-    discountPercentage, 
-    rating, 
-    thumbnail, 
-    brand,
-    stock 
-  } = product;
+export default function ProductCard({
+  product,
+  onAddToCart,
+  onToggleFavorite,
+  isFavorite: propIsFavorite,
+  onOpenDetail,
+}) {
+  const navigate = useNavigate();
+  const cartCtx = useCart();
+  const favCtx = useFavorites();
 
-  const originalPrice = Math.round(price / (1 - discountPercentage / 100));
-  const isLowStock = stock < 10;
+  const { id, title, category, price, discountPercentage = 0, rating, thumbnail } = product;
+
+  const handleAddToCart = onAddToCart ?? cartCtx?.addToCart;
+  const handleToggleFavorite = onToggleFavorite ?? favCtx?.toggleFavorite;
+  const isFavorite = propIsFavorite !== undefined ? propIsFavorite : favCtx?.isFavorite?.(id);
+
+  const originalPrice = calculateOriginalPrice(price, discountPercentage);
+
+  const handleCardClick = () => {
+    if (onOpenDetail) {
+      onOpenDetail(product);
+    } else {
+      navigate(`/product/${id}`);
+    }
+  };
 
   return (
     <article
-      onClick={() => onOpenDetail(product)}
-      className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 w-full rounded-3xl p-3 md:p-4 cursor-pointer group hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 flex flex-col h-[420px] md:h-[450px]"
+      onClick={handleCardClick}
+      className="bg-white dark:bg-neutral-900 border border-neutral-200/70 dark:border-neutral-800/80 w-full rounded-2xl p-3 cursor-pointer group hover:border-neutral-400 dark:hover:border-neutral-600 transition-all duration-200 flex flex-col justify-between"
     >
-      <div className="relative aspect-square rounded-2xl overflow-hidden bg-neutral-50 dark:bg-neutral-800/50 flex-shrink-0">
-        <img 
-          src={thumbnail} 
-          alt={title} 
-          className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal group-hover:scale-110 transition-transform duration-500" 
-        />
-        
-        {discountPercentage > 0 && (
-          <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded-full">
-            -{Math.round(discountPercentage)}%
-          </div>
-        )}
+      <div>
+        <div className="relative aspect-square rounded-xl overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/50 flex-shrink-0">
+          <img
+            src={thumbnail}
+            alt={title}
+            className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal group-hover:scale-105 transition-transform duration-300"
+          />
 
-        <button
-          onClick={(e) => { e.stopPropagation(); onToggleFavorite(id) }}
-          className="absolute top-2 right-2 h-8 w-8 md:h-10 md:w-10 grid place-items-center bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md rounded-full shadow-sm hover:scale-110 transition-transform"
-          aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-        >
-          <Heart size={18} className={isFavorite ? 'fill-red-500 text-red-500' : 'text-neutral-400 dark:text-neutral-500'} />
-        </button>
-      </div>
-
-      <div className="pt-4 flex flex-col flex-1 min-w-0">
-        <div className="flex items-center justify-between mb-1">
-          <p className="text-primary text-[10px] md:text-xs font-bold tracking-widest truncate max-w-[70%]">{category.replace('-', ' ')}</p>
-          <div className="flex items-center gap-1 flex-shrink-0">
-            <Star size={12} className="fill-yellow-400 text-yellow-400" />
-            <span className="text-[10px] md:text-xs font-black text-neutral-900 dark:text-neutral-100">{rating}</span>
-          </div>
-        </div>
-
-        <div className="h-12 mb-2">
-          <h3 className="font-black text-neutral-900 dark:text-neutral-100 text-sm md:text-base leading-snug line-clamp-2 group-hover:text-primary transition-colors tracking-tight">
-            {brand && <span className="text-neutral-400 mr-1">{brand}</span>}
-            {title}
-          </h3>
-        </div>
-
-        <div className="mt-auto pt-2 flex items-center justify-between">
-          <div className="flex flex-col">
-            {discountPercentage > 0 && (
-              <span className="text-[10px] md:text-xs text-neutral-400 dark:text-neutral-500 line-through decoration-red-500/50">
-                ${originalPrice.toLocaleString()}
-              </span>
-            )}
-            <span className="text-lg md:text-xl font-black text-neutral-900 dark:text-neutral-100 leading-none">
-              ${price.toLocaleString()}
+          {discountPercentage > 0 && (
+            <span className="absolute top-2 left-2 bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-[10px] font-bold px-2 py-0.5 rounded-md">
+              -{Math.round(discountPercentage)}%
             </span>
-          </div>
+          )}
 
           <button
-            onClick={(e) => { 
-              e.preventDefault();
-              e.stopPropagation(); 
-              onAddToCart(product);
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggleFavorite?.(product);
             }}
-            className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 grid place-items-center shadow-lg hover:bg-primary dark:hover:bg-primary hover:text-white transition-all duration-300"
-            aria-label={`Add ${title} to cart`}
+            className="absolute top-2 right-2 h-8 w-8 grid place-items-center bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm rounded-full shadow-sm hover:scale-110 active:scale-95 transition-transform"
+            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
           >
-            <ShoppingBag size={18} className="pointer-events-none" />
+            <Heart size={16} variant={isFavorite ? "Bold" : "Linear"} className={isFavorite ? "text-rose-500" : "text-neutral-400"} />
           </button>
         </div>
 
-        <div className="h-4 mt-2">
-          {isLowStock && (
-            <p className="text-[10px] font-bold text-red-500 tracking-widest flex items-center gap-1">
-              <span className="h-1 w-1 rounded-full bg-current animate-pulse" />
-              Only {stock} left
-            </p>
-          )}
+        <div className="pt-3">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 truncate max-w-[70%]">
+              {formatCategoryName(category)}
+            </span>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-neutral-600 dark:text-neutral-300">
+              <Star size={13} variant="Bold" className="text-amber-400" />
+              <span>{rating}</span>
+            </div>
+          </div>
+
+          <h3 className="font-bold text-neutral-900 dark:text-neutral-100 text-xs sm:text-sm leading-snug line-clamp-2">
+            {title}
+          </h3>
         </div>
       </div>
+
+      <div className="pt-3 mt-auto flex items-center justify-between">
+        <div>
+          {discountPercentage > 0 && (
+            <span className="text-[10px] text-neutral-400 line-through block">
+              ${originalPrice.toLocaleString()}
+            </span>
+          )}
+          <span className="text-sm sm:text-base font-black text-neutral-900 dark:text-white">
+            ${price.toLocaleString()}
+          </span>
+        </div>
+
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleAddToCart?.(product);
+          }}
+          className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 grid place-items-center hover:opacity-90 active:scale-90 transition-all shadow-sm"
+          aria-label={`Add ${title} to cart`}
+        >
+          <ShoppingBag size={14} className="pointer-events-none" />
+        </button>
+      </div>
     </article>
-  )
+  );
 }

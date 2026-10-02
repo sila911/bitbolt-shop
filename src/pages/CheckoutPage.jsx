@@ -1,9 +1,18 @@
-import { ArrowLeft, CreditCard, ShieldCheck, Truck, ShoppingBag, CheckCircle2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { ArrowLeft, Card as CreditCard, ShieldTick as ShieldCheck, TruckFast as Truck, ShoppingBag, TickCircle as CheckCircle2 } from "iconsax-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../hooks/useCart";
+import { useToast } from "../hooks/useToast";
 
-export default function CheckoutPage({ cart, total, clearCart, addToast }) {
+export default function CheckoutPage({ cart: propCart, total: propTotal, clearCart: propClearCart, addToast: propAddToast }) {
   const navigate = useNavigate();
+  const cartCtx = useCart();
+  const toastCtx = useToast();
+
+  const cart = propCart ?? cartCtx?.cart ?? [];
+  const total = propTotal ?? cartCtx?.cartTotal ?? 0;
+  const clearCart = propClearCart ?? cartCtx?.clearCart;
+  const addToast = propAddToast ?? toastCtx?.addToast;
   const [isProcessing, setIsProcessing] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
