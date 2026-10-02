@@ -23,14 +23,34 @@ import LookbookPage from "./pages/LookbookPage";
 import ShopPage from "./pages/ShopPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ExclusiveDropPage from "./pages/ExclusiveDropPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
 
 export default function App() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [cart, setCart] = useState([]);
-  const [favorites, setFavorites] = useState([]);
+
+  // Cart with localStorage persistence
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem("bitbolt-cart");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Favorites with localStorage persistence
+  const [favoriteItems, setFavoriteItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem("bitbolt-favorites");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [detailProduct, setDetailProduct] = useState(null);
@@ -47,6 +67,22 @@ export default function App() {
     if (saved) return saved === "dark";
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("bitbolt-cart", JSON.stringify(cart));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [cart]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("bitbolt-favorites", JSON.stringify(favoriteItems));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [favoriteItems]);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -187,12 +223,21 @@ export default function App() {
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  const toggleFavorite = (id) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id],
-    );
+  const toggleFavorite = (productOrId) => {
+    const id = typeof productOrId === "object" ? productOrId.id : productOrId;
+    setFavoriteItems((prev) => {
+      const exists = prev.some((item) => item.id === id);
+      if (exists) {
+        addToast("Wishlist Updated", "Item removed from your wishlist.", "info");
+        return prev.filter((item) => item.id !== id);
+      } else {
+        const found = typeof productOrId === "object" ? productOrId : products.find((p) => p.id === id);
+        addToast("Saved to Wishlist", "Item added to your wishlist.", "success");
+        return found ? [...prev, found] : [...prev, { id, title: `Product #${id}`, price: 0 }];
+      }
+    });
   };
-  const isFavorite = (id) => favorites.includes(id);
+  const isFavorite = (id) => favoriteItems.some((item) => item.id === id);
 
   const handleSearchFocus = () => {
     categorySectionRef.current?.scrollIntoView({
@@ -335,7 +380,7 @@ export default function App() {
               onAddToCart={addToCart}
               onToggleFavorite={toggleFavorite}
               isFavorite={isFavorite}
-              onOpenDetail={setDetailProduct}
+              onOpenDetail={(product) => navigate(`/product/${product.id}`)}
               onClearFilters={clearFilters}
               categories={categories}
               selectedCategory={selectedCategory}
@@ -352,12 +397,12 @@ export default function App() {
     <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300">
       <Navbar
         cartCount={cartCount}
-        favoritesCount={favorites.length}
+        favoritesCount={favoriteItems.length}
         searchTerm={searchTerm}
         onSearchChange={(e) => setSearchTerm(e.target.value)}
         searchSuggestions={searchTerm.trim() ? products.slice(0, 6) : []}
         onSelectSuggestion={(product) => {
-          setDetailProduct(product);
+          navigate(`/product/${product.id}`);
           setSearchTerm("");
         }}
         onSearchFocus={handleSearchFocus}
@@ -371,8 +416,9 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/shop" element={<ShopPage onAddToCart={addToCart} onToggleFavorite={toggleFavorite} isFavorite={isFavorite} />} />
+        <Route path="/product/:id" element={<ProductDetailPage onAddToCart={addToCart} onToggleFavorite={toggleFavorite} isFavorite={isFavorite} addToast={addToast} />} />
         <Route path="/lookbook" element={<LookbookPage />} />
-        <Route path="/shop" element={<ShopPage />} />
         <Route path="/checkout" element={<CheckoutPage 
           cart={cart} 
           total={cartTotal} 
@@ -414,7 +460,7 @@ export default function App() {
 
       <FavoritesDrawer
         isOpen={isFavoritesOpen}
-        favorites={products.filter((p) => favorites.includes(p.id))}
+        favorites={favoriteItems}
         onClose={() => setIsFavoritesOpen(false)}
         onAddToCart={addToCart}
         onRemoveFavorite={(id) => toggleFavorite(id)}

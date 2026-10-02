@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { ShoppingCart, Search, Heart, Moon, Sun } from "lucide-react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { ShoppingCart, Search, Heart, Moon, Sun, X } from "lucide-react";
 
 export default function Navbar({
   cartCount,
@@ -14,13 +15,15 @@ export default function Navbar({
   isDarkMode,
   onToggleDarkMode,
 }) {
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const searchContainerRef = useRef(null);
   const inputRef = useRef(null);
+  const mobileInputRef = useRef(null);
 
-  // Use state for tracking previous searchTerm to reset highlightedIndex during render safely
   const [prevSearchTerm, setPrevSearchTerm] = useState(searchTerm);
 
   if (prevSearchTerm !== searchTerm) {
@@ -42,15 +45,16 @@ export default function Navbar({
     };
 
     const handleGlobalKeyDown = (event) => {
-      // Global shortcut: / to focus search
-      if (event.key === "/" && document.activeElement !== inputRef.current) {
+      if (event.key === "/" && document.activeElement !== inputRef.current && document.activeElement !== mobileInputRef.current) {
         event.preventDefault();
         inputRef.current?.focus();
       }
 
       if (event.key === "Escape") {
         setIsDropdownOpen(false);
+        setIsMobileSearchOpen(false);
         inputRef.current?.blur();
+        mobileInputRef.current?.blur();
       }
     };
 
@@ -67,15 +71,16 @@ export default function Navbar({
 
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      setHighlightedIndex(prev => (prev < searchSuggestions.length - 1 ? prev + 1 : prev));
+      setHighlightedIndex((prev) => (prev < searchSuggestions.length - 1 ? prev + 1 : prev));
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
-      setHighlightedIndex(prev => (prev > 0 ? prev - 1 : -1));
+      setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : -1));
     } else if (event.key === "Enter") {
       if (highlightedIndex >= 0) {
         event.preventDefault();
         onSelectSuggestion(searchSuggestions[highlightedIndex]);
         setIsDropdownOpen(false);
+        setIsMobileSearchOpen(false);
       }
     }
   };
@@ -83,24 +88,52 @@ export default function Navbar({
   const showDropdown = isDropdownOpen && searchTerm.trim() && searchSuggestions && searchSuggestions.length > 0;
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
-      isScrolled 
-        ? "bg-white/80 dark:bg-neutral-950/80 backdrop-blur-xl py-3 shadow-xl" 
-        : "bg-transparent py-6"
-    }`}>
-      <div className="max-w-screen-2xl mx-auto px-6 md:px-12 flex items-center justify-between gap-8">
-        {/* Logo */}
-        <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <div className="w-10 h-10 bg-neutral-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-neutral-900 text-xl font-black group-hover:scale-110 transition-transform">
-            B
+    <nav
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
+        isScrolled
+          ? "bg-white/90 dark:bg-neutral-950/90 backdrop-blur-md py-2.5 shadow-sm border-b border-neutral-200/50 dark:border-neutral-800/50"
+          : "bg-transparent py-4 sm:py-5"
+      }`}
+    >
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-12 flex items-center justify-between gap-3 sm:gap-6">
+        {/* Logo & Navigation Links */}
+        <div className="flex items-center gap-6 sm:gap-8">
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-neutral-900 dark:bg-white rounded-lg flex items-center justify-center text-white dark:text-neutral-900 text-sm sm:text-base font-black group-hover:scale-105 transition-transform">
+              B
+            </div>
+            <span className="text-lg sm:text-xl font-black tracking-tight text-neutral-900 dark:text-white uppercase">
+              Bit<span className="text-neutral-400">Bolt</span>
+            </span>
+          </Link>
+
+          {/* Desktop Nav Links */}
+          <div className="hidden lg:flex items-center gap-6 text-xs font-bold uppercase tracking-wider">
+            <NavLink
+              to="/shop"
+              className={({ isActive }) =>
+                `transition-colors hover:text-neutral-900 dark:hover:text-white ${
+                  isActive ? "text-neutral-900 dark:text-white" : "text-neutral-400"
+                }`
+              }
+            >
+              Shop
+            </NavLink>
+            <NavLink
+              to="/lookbook"
+              className={({ isActive }) =>
+                `transition-colors hover:text-neutral-900 dark:hover:text-white ${
+                  isActive ? "text-neutral-900 dark:text-white" : "text-neutral-400"
+                }`
+              }
+            >
+              Lookbook
+            </NavLink>
           </div>
-          <h1 className="text-2xl font-black tracking-tighter text-neutral-900 dark:text-white">
-            Bit<span className="text-neutral-400">Bolt</span>
-          </h1>
         </div>
 
-        {/* Desktop Search */}
-        <div className="hidden md:flex flex-1 max-w-xl relative group" ref={searchContainerRef}>
+        {/* Desktop Search Bar */}
+        <div className="hidden md:flex flex-1 max-w-md lg:max-w-lg relative" ref={searchContainerRef}>
           <div className="relative w-full">
             <input
               ref={inputRef}
@@ -111,97 +144,155 @@ export default function Navbar({
                 if (e.target.value.trim()) setIsDropdownOpen(true);
               }}
               onFocus={() => {
-                onSearchFocus();
+                onSearchFocus?.();
                 if (searchTerm.trim()) setIsDropdownOpen(true);
               }}
               onKeyDown={handleInputKeyDown}
-              placeholder="Search our collection... [/]"
-              className="w-full bg-neutral-100 dark:bg-neutral-900 border-2 border-transparent focus:border-neutral-900 dark:focus:border-white py-3 px-6 pl-12 rounded-2xl outline-none transition-all duration-300 text-sm font-bold tracking-widest"
+              placeholder="Search catalog... [/]"
+              className="w-full bg-neutral-100 dark:bg-neutral-900 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-700 py-2.5 px-4 pl-10 rounded-xl outline-none transition-all text-xs font-bold tracking-wide"
             />
             <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-neutral-900 dark:group-focus-within:text-white transition-colors"
-              size={18}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400"
+              size={15}
             />
           </div>
 
           {/* Search Dropdown */}
           {showDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-3xl shadow-2xl overflow-hidden z-[110] animate-in fade-in slide-in-from-top-2 duration-300">
-              <div className="max-h-[400px] overflow-y-auto no-scrollbar">
-                <div className="p-4 grid gap-2">
-                  <p className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-neutral-400">Quick Results</p>
-                  {searchSuggestions.map((product, index) => (
-                    <button
-                      key={product.id}
-                      onClick={() => {
-                        onSelectSuggestion(product);
-                        setIsDropdownOpen(false);
-                      }}
-                      className={`flex items-center gap-4 p-3 rounded-2xl transition-colors text-left group/item ${
-                        highlightedIndex === index ? "bg-neutral-100 dark:bg-neutral-800" : "hover:bg-neutral-50 dark:hover:bg-neutral-800"
-                      }`}
-                    >
-                      <div className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex-shrink-0 overflow-hidden p-1">
-                        <img src={product.thumbnail} alt={product.title} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-bold text-neutral-900 dark:text-white truncate group-hover/item:text-primary transition-colors">{product.title}</h4>
-                        <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">{product.category.replace('-', ' ')}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-black text-neutral-900 dark:text-white">${product.price}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-xl overflow-hidden z-[110]">
+              <div className="max-h-[360px] overflow-y-auto no-scrollbar p-2">
+                {searchSuggestions.map((product, index) => (
+                  <button
+                    key={product.id}
+                    onClick={() => {
+                      onSelectSuggestion(product);
+                      setIsDropdownOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition-colors text-left ${
+                      highlightedIndex === index
+                        ? "bg-neutral-100 dark:bg-neutral-800"
+                        : "hover:bg-neutral-50 dark:hover:bg-neutral-800/60"
+                    }`}
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-neutral-100 dark:bg-neutral-800 flex-shrink-0 p-1">
+                      <img
+                        src={product.thumbnail}
+                        alt={product.title}
+                        className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-bold text-neutral-900 dark:text-white truncate">
+                        {product.title}
+                      </h4>
+                      <p className="text-[10px] text-neutral-400 uppercase tracking-wider">
+                        {product.category?.replace("-", " ")}
+                      </p>
+                    </div>
+                    <span className="text-xs font-black text-neutral-900 dark:text-white">
+                      ${product.price}
+                    </span>
+                  </button>
+                ))}
               </div>
-              <button 
-                onClick={() => setIsDropdownOpen(false)}
-                className="w-full p-4 bg-neutral-50 dark:bg-neutral-800/50 text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors border-t border-neutral-100 dark:border-neutral-800"
-              >
-                View all results for "{searchTerm}"
-              </button>
             </div>
           )}
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-4 md:gap-8">
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Mobile Search Toggle */}
+          <button
+            onClick={() => {
+              setIsMobileSearchOpen((prev) => !prev);
+              setTimeout(() => mobileInputRef.current?.focus(), 100);
+            }}
+            className="md:hidden p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+            aria-label="Toggle mobile search"
+          >
+            {isMobileSearchOpen ? <X size={17} /> : <Search size={17} />}
+          </button>
+
+          {/* Dark Mode Toggle */}
           <button
             onClick={(e) => {
               e.preventDefault();
               onToggleDarkMode();
             }}
-            className="p-3 bg-neutral-100 dark:bg-neutral-900 rounded-xl text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-all active:scale-90 z-[110]"
+            className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
             aria-label="Toggle dark mode"
           >
-            {isDarkMode ? <Sun size={20} className="pointer-events-none" /> : <Moon size={20} className="pointer-events-none" />}
+            {isDarkMode ? <Sun size={17} /> : <Moon size={17} />}
           </button>
 
+          {/* Favorites Button */}
           <button
             onClick={onOpenFavorites}
-            className="relative p-3 bg-neutral-100 dark:bg-neutral-900 rounded-xl text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+            className="relative p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+            aria-label="Open wishlist"
           >
-            <Heart size={20} />
+            <Heart size={17} />
             {favoritesCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                 {favoritesCount}
               </span>
             )}
           </button>
 
+          {/* Cart Button */}
           <button
             onClick={onOpenCart}
-            className="relative flex items-center gap-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg"
+            className="flex items-center gap-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-3.5 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 active:scale-95 transition-all shadow-sm"
+            aria-label="Open cart"
           >
-            <ShoppingCart size={18} />
-            <span className="hidden sm:inline">Cart</span>
-            <span className="bg-white/20 dark:bg-neutral-900/10 px-2 py-0.5 rounded-md">
+            <ShoppingCart size={15} />
+            <span className="hidden sm:inline">Bag</span>
+            <span className="bg-white/20 dark:bg-neutral-900/10 px-1.5 py-0.2 rounded text-[10px]">
               {cartCount}
             </span>
           </button>
         </div>
       </div>
+
+      {/* Expandable Mobile Search */}
+      {isMobileSearchOpen && (
+        <div className="md:hidden px-4 pt-3 pb-2 bg-white/95 dark:bg-neutral-950/95 border-b border-neutral-200 dark:border-neutral-800">
+          <div className="relative">
+            <input
+              ref={mobileInputRef}
+              type="text"
+              value={searchTerm}
+              onChange={(e) => onSearchChange(e)}
+              placeholder="Search products..."
+              className="w-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 py-2 px-3 pl-9 rounded-xl outline-none text-xs font-bold"
+            />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={14} />
+          </div>
+
+          {searchTerm.trim() && searchSuggestions && searchSuggestions.length > 0 && (
+            <div className="mt-2 max-h-[240px] overflow-y-auto no-scrollbar space-y-1 py-1">
+              {searchSuggestions.slice(0, 5).map((product) => (
+                <button
+                  key={product.id}
+                  onClick={() => {
+                    navigate(`/product/${product.id}`);
+                    setIsMobileSearchOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-900 text-left"
+                >
+                  <img
+                    src={product.thumbnail}
+                    alt={product.title}
+                    className="w-8 h-8 rounded object-contain mix-blend-multiply dark:mix-blend-normal bg-neutral-100 dark:bg-neutral-800 p-0.5"
+                  />
+                  <span className="text-xs font-bold truncate flex-1">{product.title}</span>
+                  <span className="text-xs font-black">${product.price}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   );
 }

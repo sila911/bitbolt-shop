@@ -19,38 +19,43 @@ export default function CategoryFilter({ categories, selected, onSelect }) {
 
   return (
     <div className="relative group w-full">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <button
           onClick={() => scroll("left")}
-          className="p-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all shadow-sm opacity-0 group-hover:opacity-100 hidden md:block"
+          className="p-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors shadow-sm hidden md:grid place-items-center flex-shrink-0"
+          aria-label="Scroll categories left"
         >
-          <ChevronLeft size={20} />
+          <ChevronLeft size={16} />
         </button>
 
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-auto pb-4 no-scrollbar items-center scroll-smooth snap-x snap-mandatory"
+          className="flex gap-2 overflow-x-auto pb-2 no-scrollbar items-center scroll-smooth snap-x snap-mandatory flex-1"
         >
-          {formattedCategories.map((cat) => (
-            <button
-              key={cat.slug}
-              onClick={() => onSelect(cat.slug)}
-              className={`px-8 py-3 rounded-2xl text-xs font-black tracking-widest whitespace-nowrap transition-all duration-300 border-2 snap-start ${
-                selected === cat.slug
-                  ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 border-neutral-900 dark:border-white shadow-xl scale-105"
-                  : "bg-white dark:bg-neutral-900 text-neutral-400 border-neutral-100 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700"
-              }`}
-            >
-              {cat.name.replace("-", " ")}
-            </button>
-          ))}
+          {formattedCategories.map((cat) => {
+            const isSelected = selected === cat.slug;
+            return (
+              <button
+                key={cat.slug}
+                onClick={() => onSelect(cat.slug)}
+                className={`px-5 py-2 rounded-xl text-xs font-bold tracking-wide whitespace-nowrap transition-all duration-200 snap-start border ${
+                  isSelected
+                    ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 border-neutral-900 dark:border-white shadow-sm"
+                    : "bg-white dark:bg-neutral-900/60 text-neutral-500 dark:text-neutral-400 border-neutral-200/70 dark:border-neutral-800 hover:text-neutral-900 dark:hover:text-white hover:border-neutral-300 dark:hover:border-neutral-700"
+                }`}
+              >
+                {cat.name.replace("-", " ")}
+              </button>
+            );
+          })}
         </div>
 
         <button
           onClick={() => scroll("right")}
-          className="p-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all shadow-sm opacity-0 group-hover:opacity-100 hidden md:block"
+          className="p-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors shadow-sm hidden md:grid place-items-center flex-shrink-0"
+          aria-label="Scroll categories right"
         >
-          <ChevronRight size={20} />
+          <ChevronRight size={16} />
         </button>
       </div>
     </div>

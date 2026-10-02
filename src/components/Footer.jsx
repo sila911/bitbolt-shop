@@ -8,17 +8,17 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-neutral-100 dark:bg-neutral-900 pt-24 pb-12 border-t border-neutral-200 dark:border-neutral-800">
+    <footer className="bg-neutral-100 dark:bg-neutral-900 pt-16 pb-12 border-t border-neutral-200 dark:border-neutral-800">
       <div className="max-w-screen-2xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 mb-14">
           {/* Brand Column */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-neutral-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-neutral-900 text-xl font-black">B</div>
-              <h1 className="text-3xl font-black tracking-tighter text-neutral-900 dark:text-white uppercase">BitBolt</h1>
+              <div className="w-9 h-9 bg-neutral-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-neutral-900 text-lg font-black">B</div>
+              <h1 className="text-2xl font-black tracking-tight text-neutral-900 dark:text-white uppercase">BitBolt</h1>
             </div>
-            <p className="text-neutral-500 dark:text-neutral-400 max-w-sm leading-relaxed font-medium">
-              Redefining the digital shopping experience with premium gear and seamless delivery. Join the future of essential lifestyle.
+            <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-xs leading-relaxed font-medium">
+              Curated gear, tech, and everyday essentials.
             </p>
             <div className="flex gap-4">
               {[MessageCircle, Send, Camera, Terminal].map((Icon, i) => (

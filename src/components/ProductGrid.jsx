@@ -18,15 +18,15 @@ export default function ProductGrid({
   return (
     <section ref={gridRef} className="max-w-screen-2xl mx-auto px-4 md:px-8 pb-20">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl md:text-4xl font-black text-neutral-900 dark:text-white tracking-tighter">
-          Exclusive <span className="text-neutral-400">Collection</span>
+        <h2 className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white tracking-tight uppercase">
+          Products
         </h2>
-        <p className="text-xs md:text-sm font-bold text-neutral-400 tracking-widest uppercase">
-          {isLoading ? 'Searching...' : `${products.length} Items Found`}
-        </p>
+        <span className="text-xs font-bold text-neutral-400">
+          {isLoading ? 'Loading...' : `${products.length} items`}
+        </span>
       </div>
 
-      <div className="mb-12">
+      <div className="mb-8">
         <CategoryFilter
           categories={categories}
           selected={selectedCategory}
@@ -37,15 +37,14 @@ export default function ProductGrid({
       {isLoading ? (
         <ProductGridSkeleton count={products.length > 0 ? products.length : 10} />
       ) : products.length === 0 ? (
-        <div className="bg-neutral-100 dark:bg-neutral-900/50 rounded-[3rem] p-12 md:p-24 text-center border-2 border-dashed border-neutral-200 dark:border-neutral-800">
-          <div className="text-6xl mb-6">🔍</div>
-          <p className="text-2xl md:text-3xl font-black text-neutral-900 dark:text-white">No products match your vibe</p>
-          <p className="text-neutral-500 dark:text-neutral-400 mt-2 max-w-md mx-auto">Try adjusting your filters or search terms to find what you're looking for.</p>
+        <div className="bg-neutral-50 dark:bg-neutral-900/40 rounded-3xl p-12 text-center border border-neutral-200/80 dark:border-neutral-800">
+          <p className="text-lg font-bold text-neutral-900 dark:text-white">No products found</p>
+          <p className="text-xs text-neutral-400 mt-1 mb-6">Try searching with different terms or selecting another category.</p>
           <button
             onClick={onClearFilters}
-            className="mt-8 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-8 py-4 rounded-full text-xs font-black tracking-widest hover:scale-105 transition-transform"
+            className="bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity"
           >
-            Clear all filters
+            Reset Filters
           </button>
         </div>
       ) : (

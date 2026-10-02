@@ -68,3 +68,19 @@ export async function searchProducts(query, signal) {
     throw error;
   }
 }
+
+/**
+ * Fetch a single product by ID
+ */
+export async function fetchProductById(id, signal) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/products/${id}`, { signal });
+    if (!response.ok) throw new Error(`Failed to fetch product #${id}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') return null;
+    console.error('[ProductAPI] fetchProductById error:', error);
+    throw error;
+  }
+}

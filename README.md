@@ -1,5 +1,8 @@
 # BitBolt E-Commerce ⚡
 
+[![wakatime](https://wakatime.com/badge/user/6fa73df2-a15a-4bf9-9e30-165242109616/project/c68fcd45-2670-48ff-9451-5c6653614466.svg)](https://wakatime.com/badge/user/6fa73df2-a15a-4bf9-9e30-165242109616/project/c68fcd45-2670-48ff-9451-5c6653614466)
+
+
 BitBolt is a premium, high-performance e-commerce storefront built with **React 19**, **Vite**, and **Tailwind CSS**. It features a modern dark-themed aesthetic, real-time data fetching via the DummyJSON API, and a seamless multi-page shopping experience.
 
 ## Features 🚀
