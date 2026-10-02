@@ -1,6 +1,7 @@
 # Active Context: BitBolt
 
 ## Current Status
+
 - The codebase is functional, compiles cleanly with Vite (`npm run build` succeeds in ~1.8s), and passes ESLint with 0 errors and 0 warnings (`npm run lint`).
 - The storefront features two home/browsing modes:
   1. `NovaHomePage`: Dark aesthetic with sidebars, promo cards, and curated product rails.
@@ -10,6 +11,7 @@
 ---
 
 ## Recent Changes & Fixes
+
 - **Mobile/Tablet Search Icon Only & Dedicated `/search` Page**:
   - In [TopHeader.jsx](file:///d:/Code/React%20JS/bitbolt/src/components/layout/TopHeader.jsx), made full search bar desktop-only (`hidden lg:flex`), and added a search icon button for tablet and phone (`lg:hidden`) that navigates directly to `/search`.
   - In [Navbar.jsx](file:///d:/Code/React%20JS/bitbolt/src/components/layout/Navbar.jsx), updated mobile search icon to route to `/search`.
@@ -71,7 +73,9 @@
   - Imported `goey-toast/styles.css` in `src/main.jsx`.
   - Replaced custom toast DOM rendering in `src/components/ui/ToastManager.jsx` with `<GoeyToaster position="top-right" theme={isDarkMode ? "dark" : "light"} richColors closeButton duration={4000} />`.
   - Updated `src/context/ToastContext.jsx` to route `addToast` calls through `goeyToast.success/error/warning/info` with title, description, and deduplication ID.
+
   - Re-exported `toast` from `src/hooks/useToast.js` for flexible usage.
+
 - **ESLint & Fast Refresh Resolution**:
   - `eslint.config.js`: Added `allowExportNames: ['CartContext', 'FavoritesContext', 'ThemeContext', 'ToastContext']` for `react-refresh/only-export-components`.
   - `src/pages/CheckoutPage.jsx`: Added missing `import { useState } from "react"`.
@@ -86,11 +90,13 @@
 ## Active Decisions & Architectural Observations
 
 ### 1. API Endpoint Configuration
+
 - In `src/utils/constants.js`, `API_BASE_URL` is hardcoded to `"https://dummyjson.com"`.
 - Meanwhile, `.env.example` lists `VITE_API_BASE_URL=https://api.escuelajs.co/api/v1` and `VITE_ENABLE_FALLBACK=true`.
 - **Decision Needed**: Determine whether `API_BASE_URL` in `constants.js` should read `import.meta.env.VITE_API_BASE_URL || "https://dummyjson.com"` and align data modeling if EscuelaJS API is ever intended to be used. Currently, all data structures (e.g. `product.rating`, `product.stock`, `product.discountPercentage`, `product.images`) depend on DummyJSON's schema.
 
 ### 2. Dual Checkout Flows
+
 - Flow A: `CheckoutInfoModal.jsx` connects to `sendTelegramOrder` via `handleTelegramCheckout` in `App.jsx`.
 - Flow B: `CheckoutPage.jsx` has a standalone multi-column form that simulates processing locally with `setTimeout`, but does not currently call `sendTelegramOrder`.
 - **Decision Needed**: Unify or clarify whether `CheckoutPage.jsx` should also dispatch to `sendTelegramOrder`.
@@ -98,6 +104,7 @@
 ---
 
 ## Immediate Next Steps
+
 1. **Dynamic Environment Variable for API**:
    Update `src/utils/constants.js` to prioritize `import.meta.env.VITE_API_BASE_URL` with a sensible fallback (`https://dummyjson.com`).
 2. **Checkout Flow Synchronization**:
