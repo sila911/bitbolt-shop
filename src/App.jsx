@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { fetchAllProducts, fetchCategories, fetchProductsByCategory, searchProducts } from "./services/productApi";
@@ -24,6 +24,7 @@ import ShopPage from "./pages/ShopPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ExclusiveDropPage from "./pages/ExclusiveDropPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
+import NovaHomePage from "./pages/NovaHomePage";
 
 export default function App() {
   const [products, setProducts] = useState([]);
@@ -61,6 +62,8 @@ export default function App() {
   const [toasts, setToasts] = useState([]);
   const categorySectionRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
 
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem("bitbolt-theme");
@@ -394,28 +397,54 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300">
-      <Navbar
-        cartCount={cartCount}
-        favoritesCount={favoriteItems.length}
-        searchTerm={searchTerm}
-        onSearchChange={(e) => setSearchTerm(e.target.value)}
-        searchSuggestions={searchTerm.trim() ? products.slice(0, 6) : []}
-        onSelectSuggestion={(product) => {
-          navigate(`/product/${product.id}`);
-          setSearchTerm("");
-        }}
-        onSearchFocus={handleSearchFocus}
-        onOpenCart={() => setIsCartOpen(true)}
-        onOpenFavorites={() => setIsFavoritesOpen(true)}
-        isDarkMode={isDarkMode}
-        onToggleDarkMode={() => setIsDarkMode((prev) => !prev)}
-      />
+    <div className="min-h-screen bg-[#f4f5f9] dark:bg-[#0c0c0e] text-neutral-900 dark:text-neutral-100 transition-colors duration-300">
+      {!isHome && (
+        <Navbar
+          cartCount={cartCount}
+          favoritesCount={favoriteItems.length}
+          searchTerm={searchTerm}
+          onSearchChange={(e) => setSearchTerm(e.target.value)}
+          searchSuggestions={searchTerm.trim() ? products.slice(0, 6) : []}
+          onSelectSuggestion={(product) => {
+            navigate(`/product/${product.id}`);
+            setSearchTerm("");
+          }}
+          onSearchFocus={handleSearchFocus}
+          onOpenCart={() => setIsCartOpen(true)}
+          onOpenFavorites={() => setIsFavoritesOpen(true)}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={() => setIsDarkMode((prev) => !prev)}
+        />
+      )}
 
       <ToastManager toasts={toasts} removeToast={removeToast} />
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={
+            <NovaHomePage
+              products={products}
+              cart={cart}
+              onAddToCart={addToCart}
+              onUpdateQuantity={updateQuantity}
+              onRemoveFromCart={removeFromCart}
+              onToggleFavorite={toggleFavorite}
+              isFavorite={isFavorite}
+              favoritesCount={favoriteItems.length}
+              searchTerm={searchTerm}
+              onSearchChange={(e) => setSearchTerm(e.target.value)}
+              searchSuggestions={searchTerm.trim() ? products.slice(0, 6) : []}
+              onSelectSuggestion={(product) => {
+                navigate(`/product/${product.id}`);
+                setSearchTerm("");
+              }}
+              isDarkMode={isDarkMode}
+              onToggleDarkMode={() => setIsDarkMode((prev) => !prev)}
+              onShopClick={() => navigate("/shop")}
+            />
+          }
+        />
         <Route path="/shop" element={<ShopPage onAddToCart={addToCart} onToggleFavorite={toggleFavorite} isFavorite={isFavorite} />} />
         <Route path="/product/:id" element={<ProductDetailPage onAddToCart={addToCart} onToggleFavorite={toggleFavorite} isFavorite={isFavorite} addToast={addToast} />} />
         <Route path="/lookbook" element={<LookbookPage />} />
@@ -466,9 +495,11 @@ export default function App() {
         onRemoveFavorite={(id) => toggleFavorite(id)}
       />
 
-      <div data-aos="fade-up" data-aos-delay="60">
-        <Footer />
-      </div>
+      {!isHome && (
+        <div data-aos="fade-up" data-aos-delay="60">
+          <Footer />
+        </div>
+      )}
     </div>
   );
 }
