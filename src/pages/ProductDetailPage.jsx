@@ -4,16 +4,15 @@ import {
   ArrowLeft, 
   Heart, 
   ShoppingBag, 
-  Star, 
-  Truck, 
-  ShieldCheck, 
-  RotateCcw, 
-  Package, 
-  Check, 
+  Star1 as Star, 
+  TruckFast as Truck, 
+  ShieldTick as ShieldCheck, 
+  RotateLeft as RotateCcw, 
+  TickSquare as Check, 
   Minus, 
-  Plus, 
-  Share2 
-} from "lucide-react";
+  Add as Plus, 
+  Share as Share2 
+} from "iconsax-react";
 import { fetchProductById, fetchProductsByCategory } from "../api";
 import ProductCard from "../components/ProductCard";
 import { useCart } from "../hooks/useCart";
@@ -193,7 +192,7 @@ export default function ProductDetailPage({
               className="p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 shadow-sm transition-colors"
               aria-label={favorited ? "Remove from wishlist" : "Add to wishlist"}
             >
-              <Heart size={18} className={favorited ? "fill-red-500 text-red-500" : "text-neutral-500"} />
+              <Heart size={18} variant={favorited ? "Bold" : "Linear"} className={favorited ? "text-red-500" : "text-neutral-500"} />
             </button>
           </div>
         </div>
@@ -270,7 +269,7 @@ export default function ProductDetailPage({
               {/* Rating & Stock status */}
               <div className="flex items-center gap-4 mt-3">
                 <div className="flex items-center gap-1.5 bg-neutral-100 dark:bg-neutral-900 px-3 py-1 rounded-lg text-xs font-bold">
-                  <Star size={13} className="fill-amber-400 text-amber-400" />
+                  <Star size={13} variant="Bold" className="text-amber-400" />
                   <span>{rating}</span>
                   {reviews && reviews.length > 0 && (
                     <span className="text-neutral-400 font-medium">({reviews.length})</span>
@@ -347,7 +346,7 @@ export default function ProductDetailPage({
                     : "bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:border-neutral-400 dark:hover:border-neutral-600"
                 }`}
               >
-                <Heart size={16} className={favorited ? "fill-current" : ""} />
+                <Heart size={16} variant={favorited ? "Bold" : "Linear"} className={favorited ? "text-red-500" : ""} />
                 <span>{favorited ? "Saved" : "Save"}</span>
               </button>
             </div>
@@ -425,7 +424,8 @@ export default function ProductDetailPage({
                         <Star
                           key={i}
                           size={12}
-                          className={i < rev.rating ? "fill-amber-400 text-amber-400" : "text-neutral-200 dark:text-neutral-700"}
+                          variant={i < rev.rating ? "Bold" : "Linear"}
+                          className={i < rev.rating ? "text-amber-400" : "text-neutral-300 dark:text-neutral-700"}
                         />
                       ))}
                     </div>

@@ -1,5 +1,6 @@
+
 import { useState, useRef, useEffect } from "react";
-import { Search, Heart, Bell, Menu, ShoppingCart, ChevronDown, Check, User, LogOut } from "lucide-react";
+import { SearchNormal1 as Search, Heart, Notification as Bell, HambergerMenu as Menu, Bag2 as ShoppingCart } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 import { useFavorites } from "../../hooks/useFavorites";
@@ -25,7 +26,6 @@ export default function TopHeader({
   const onOpenFavorites = propOnOpenFavorites ?? (() => favCtx?.setIsFavoritesOpen?.(true));
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const searchRef = useRef(null);
 
   useEffect(() => {
@@ -167,58 +167,6 @@ export default function TopHeader({
               </span>
             )}
           </button>
-
-          {/* User Profile */}
-          <div className="relative">
-            <button
-              onClick={() => setIsUserMenuOpen((prev) => !prev)}
-              className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120"
-                alt="Alina Putri"
-                className="w-8 h-8 rounded-full object-cover ring-2 ring-purple-500/20"
-              />
-              <span className="hidden sm:inline text-xs font-bold text-neutral-800 dark:text-neutral-200">
-                Alina Putri
-              </span>
-              <ChevronDown size={14} className="text-neutral-400" />
-            </button>
-
-            {isUserMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-xl py-2 z-40">
-                <div className="px-4 py-2 border-b border-neutral-100 dark:border-neutral-800">
-                  <p className="text-xs font-bold text-neutral-900 dark:text-white">Alina Putri</p>
-                  <p className="text-[10px] text-neutral-400">alina.putri@novashop.com</p>
-                </div>
-                <button
-                  onClick={() => {
-                    setIsUserMenuOpen(false);
-                    navigate("/orders");
-                  }}
-                  className="w-full px-4 py-2 text-left text-xs text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 flex items-center gap-2"
-                >
-                  <User size={14} /> My Profile
-                </button>
-                <button
-                  onClick={() => {
-                    setIsUserMenuOpen(false);
-                    navigate("/checkout");
-                  }}
-                  className="w-full px-4 py-2 text-left text-xs text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 flex items-center gap-2"
-                >
-                  <Check size={14} /> Orders
-                </button>
-                <div className="border-t border-neutral-100 dark:border-neutral-800 my-1" />
-                <button
-                  onClick={() => setIsUserMenuOpen(false)}
-                  className="w-full px-4 py-2 text-left text-xs text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 flex items-center gap-2"
-                >
-                  <LogOut size={14} /> Sign Out
-                </button>
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </header>

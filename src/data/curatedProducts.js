@@ -74,7 +74,7 @@ export const CURATED_RECOMMENDED = [
     id: 105,
     title: "Oversized Cotton Shirt",
     category: "Beige",
-    brand: "Nova Studio",
+    brand: "BitBolt Studio",
     price: 29.99,
     discountPercentage: 15,
     rating: 4.6,

@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 
 export default function PromoCardsRow() {

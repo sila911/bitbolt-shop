@@ -1,19 +1,19 @@
-import { X, Heart, Star, ShoppingBag, Truck, ShieldCheck, RefreshCcw, StarHalf } from 'lucide-react'
-import { useState } from 'react'
+import { CloseCircle as X, Heart, Star1 as Star, ShoppingBag, TruckFast as Truck, ShieldTick as ShieldCheck, RotateLeft as RefreshCcw } from 'iconsax-react';
+import { useState } from 'react';
 
-import { useCart } from '../hooks/useCart'
-import { useFavorites } from '../hooks/useFavorites'
+import { useCart } from '../hooks/useCart';
+import { useFavorites } from '../hooks/useFavorites';
 
 export default function ProductDetailModal({ product, isOpen, onClose, onAddToCart, onToggleFavorite, isFavorite }) {
-  const [activeImage, setActiveImage] = useState(0)
-  const cartCtx = useCart()
-  const favCtx = useFavorites()
+  const [activeImage, setActiveImage] = useState(0);
+  const cartCtx = useCart();
+  const favCtx = useFavorites();
 
-  if (!isOpen || !product) return null
+  if (!isOpen || !product) return null;
 
-  const handleAddToCart = onAddToCart ?? cartCtx?.addToCart
-  const handleToggleFavorite = onToggleFavorite ?? favCtx?.toggleFavorite
-  const favorited = isFavorite !== undefined ? isFavorite : favCtx?.isFavorite?.(product.id)
+  const handleAddToCart = onAddToCart ?? cartCtx?.addToCart;
+  const handleToggleFavorite = onToggleFavorite ?? favCtx?.toggleFavorite;
+  const favorited = isFavorite !== undefined ? isFavorite : favCtx?.isFavorite?.(product.id);
 
   const {
     title,
@@ -31,24 +31,24 @@ export default function ProductDetailModal({ product, isOpen, onClose, onAddToCa
     returnPolicy,
     weight,
     dimensions
-  } = product
+  } = product;
 
-  const originalPrice = Math.round(price / (1 - discountPercentage / 100))
-  const isLowStock = stock < 10
+  const originalPrice = Math.round(price / (1 - discountPercentage / 100));
+  const isLowStock = stock < 10;
 
-  const renderStars = (rating) => {
-    const stars = []
+  const renderStars = (ratingVal) => {
+    const stars = [];
     for (let i = 1; i <= 5; i++) {
-      if (i <= Math.floor(rating)) {
-        stars.push(<Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />)
-      } else if (i - 0.5 <= rating) {
-        stars.push(<StarHalf key={i} size={16} className="fill-yellow-400 text-yellow-400" />)
+      if (i <= Math.floor(ratingVal)) {
+        stars.push(<Star key={i} size={16} variant="Bold" className="text-amber-400" />);
+      } else if (i - 0.5 <= ratingVal) {
+        stars.push(<Star key={i} size={16} variant="Linear" className="text-amber-400" />);
       } else {
-        stars.push(<Star key={i} size={16} className="text-neutral-300 dark:text-neutral-700" />)
+        stars.push(<Star key={i} size={16} variant="Linear" className="text-neutral-300 dark:text-neutral-700" />);
       }
     }
-    return stars
-  }
+    return stars;
+  };
 
   return (
     <div className="fixed inset-0 bg-neutral-950/40 backdrop-blur-md flex items-center justify-center z-[9999] p-4" onClick={onClose}>
@@ -183,7 +183,7 @@ export default function ProductDetailModal({ product, isOpen, onClose, onAddToCa
                       : 'border-neutral-100 dark:border-neutral-800 text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700'
                   }`}
                 >
-                  <Heart size={24} className={favorited ? 'fill-current' : ''} />
+                  <Heart size={24} variant={favorited ? 'Bold' : 'Linear'} className={favorited ? 'text-red-500' : ''} />
                 </button>
               </div>
 

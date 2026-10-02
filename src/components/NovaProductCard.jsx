@@ -1,4 +1,4 @@
-import { Heart, ShoppingBag, Star } from "lucide-react";
+import { Heart, ShoppingBag, Star1 as Star } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import { useFavorites } from "../hooks/useFavorites";
@@ -68,8 +68,9 @@ export default function NovaProductCard({
             aria-label={favorited ? "Remove from wishlist" : "Add to wishlist"}
           >
             <Heart
-              size={14}
-              className={favorited ? "fill-rose-500 text-rose-500" : "text-neutral-400 dark:text-neutral-500"}
+              size={15}
+              variant={favorited ? "Bold" : "Linear"}
+              className={favorited ? "text-rose-500" : "text-neutral-400 dark:text-neutral-500"}
             />
           </button>
         </div>
@@ -115,13 +116,13 @@ export default function NovaProductCard({
               className="w-8 h-8 rounded-full bg-[#6c5ce7] hover:bg-[#5b4cc4] text-white flex items-center justify-center shadow-md shadow-purple-500/20 active:scale-90 transition-all"
               aria-label={`Add ${title} to bag`}
             >
-              <ShoppingBag size={14} />
+              <ShoppingBag size={15} variant="Linear" />
             </button>
           </div>
         ) : (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1 text-[11px] font-bold text-neutral-700 dark:text-neutral-300">
-              <Star size={12} className="fill-amber-400 text-amber-400" />
+              <Star size={13} variant="Bold" className="text-amber-400" />
               <span>{rating}</span>
               <span className="text-[10px] text-neutral-400 font-normal">(124)</span>
             </div>
@@ -134,7 +135,7 @@ export default function NovaProductCard({
               className="p-1.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 hover:text-[#6c5ce7] transition-colors"
               aria-label={`Add ${title} to bag`}
             >
-              <ShoppingBag size={16} />
+              <ShoppingBag size={17} variant="Linear" />
             </button>
           </div>
         )}

@@ -1,4 +1,4 @@
-import { Heart, ShoppingBag, Star } from "lucide-react";
+import { Heart, ShoppingBag, Star1 as Star } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import { useFavorites } from "../hooks/useFavorites";
@@ -58,7 +58,7 @@ export default function ProductCard({
             className="absolute top-2 right-2 h-8 w-8 grid place-items-center bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm rounded-full shadow-sm hover:scale-110 active:scale-95 transition-transform"
             aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
           >
-            <Heart size={15} className={isFavorite ? "fill-red-500 text-red-500" : "text-neutral-400"} />
+            <Heart size={16} variant={isFavorite ? "Bold" : "Linear"} className={isFavorite ? "text-rose-500" : "text-neutral-400"} />
           </button>
         </div>
 
@@ -68,7 +68,7 @@ export default function ProductCard({
               {formatCategoryName(category)}
             </span>
             <div className="flex items-center gap-1 text-[11px] font-bold text-neutral-600 dark:text-neutral-300">
-              <Star size={11} className="fill-amber-400 text-amber-400" />
+              <Star size={13} variant="Bold" className="text-amber-400" />
               <span>{rating}</span>
             </div>
           </div>

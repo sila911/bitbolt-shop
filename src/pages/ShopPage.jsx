@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { ArrowLeft, SlidersHorizontal, Tag, Flame, Trophy, X, Search, Sparkles } from "lucide-react";
+import { ArrowLeft, FilterSearch as SlidersHorizontal, Tag, Flash as Flame, Cup as Trophy, CloseCircle as X, SearchNormal1 as Search, MagicStar as Sparkles } from "iconsax-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { fetchAllProducts, fetchCategories, fetchProductsByCategory, searchProducts } from "../api";
 import ProductCard from "../components/ProductCard";
@@ -29,6 +29,9 @@ export default function ShopPage({ onAddToCart, onToggleFavorite, isFavorite }) 
   const [sortBy, setSortBy] = useState(sortParam);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const currentKey = `${categoryParam}::${searchQuery}`;
+  const [loadedKey, setLoadedKey] = useState("");
 
   // Sync sortBy when sortParam changes
   useEffect(() => {
@@ -60,19 +63,27 @@ export default function ShopPage({ onAddToCart, onToggleFavorite, isFavorite }) 
           data = await fetchAllProducts(100, 0, controller.signal);
         }
 
-        if (data) setProducts(data);
+        if (!controller.signal.aborted) {
+          if (data) {
+            setProducts(data);
+          }
+          setLoadedKey(currentKey);
+        }
       } catch (err) {
-        if (err.name !== "AbortError") {
+        if (err.name !== "AbortError" && !controller.signal.aborted) {
           setError(err.message || "Failed to load products");
+          setLoadedKey(currentKey);
         }
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
       }
     }
 
     loadProducts();
     return () => controller.abort();
-  }, [categoryParam, searchQuery]);
+  }, [categoryParam, searchQuery, currentKey]);
 
   // Handle category selection
   const handleSelectCategory = (catSlug) => {
@@ -120,6 +131,9 @@ export default function ShopPage({ onAddToCart, onToggleFavorite, isFavorite }) 
     setSearchParams({});
     setSortBy("featured");
   };
+
+  // Track if current category/query data is completely loaded
+  const isDataReady = !isLoading && loadedKey === currentKey;
 
   // Filter and sort products dynamically
   const filteredProducts = useMemo(() => {
@@ -187,7 +201,7 @@ export default function ShopPage({ onAddToCart, onToggleFavorite, isFavorite }) 
                 {getHeaderTitle()}
               </h1>
               <p className="text-xs text-neutral-500 font-medium">
-                {isLoading ? "Fetching real data..." : `${filteredProducts.length} items available`}
+                {!isDataReady ? "Fetching real data..." : `${filteredProducts.length} items available`}
               </p>
             </div>
           </div>
@@ -290,7 +304,7 @@ export default function ShopPage({ onAddToCart, onToggleFavorite, isFavorite }) 
               Reset Filters
             </button>
           </div>
-        ) : isLoading ? (
+        ) : !isDataReady ? (
           <ProductGridSkeleton count={10} />
         ) : filteredProducts.length === 0 ? (
           <div className="bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 rounded-3xl p-12 text-center max-w-md mx-auto">

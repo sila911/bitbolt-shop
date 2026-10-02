@@ -1,5 +1,5 @@
-import { MapPin, X } from 'lucide-react'
-import { useState } from 'react'
+import { Location as MapPin, CloseCircle as X } from "iconsax-react";
+import { useState } from "react";
 
 const initialForm = {
   fullName: '',

@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft2 as ChevronLeft, ArrowRight2 as ChevronRight } from "iconsax-react";
 import { useRef } from "react";
 
 export default function CategoryFilter({ categories, selected, onSelect }) {

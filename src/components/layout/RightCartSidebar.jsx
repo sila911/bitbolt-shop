@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Minus, Plus, Trash2, ArrowRight, Lock, Plus as PlusIcon, X } from "lucide-react";
+import { Minus, Add as Plus, Trash as Trash2, ArrowRight, Lock, Add as PlusIcon, CloseCircle as X } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 
@@ -253,7 +253,7 @@ export default function RightCartSidebar({
 
         <div className="p-4 rounded-3xl bg-gradient-to-br from-[#6c5ce7] to-[#8c7bf7] text-white relative overflow-hidden shadow-lg shadow-purple-500/15">
           <div className="relative z-10 space-y-2 max-w-[70%]">
-            <h5 className="text-xs font-black leading-tight">Join NovaShop Club</h5>
+            <h5 className="text-xs font-black leading-tight">Join BitBolt Club</h5>
             <p className="text-[10px] text-white/80 leading-snug">Get exclusive offers, early access and more!</p>
             <button
               onClick={() => navigate("/checkout")}

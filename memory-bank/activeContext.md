@@ -10,6 +10,28 @@
 ---
 
 ## Recent Changes & Fixes
+- **Iconsax React 19 Display Fix & Compatibility**:
+  - Identified root cause of icons not rendering: React 19 removed support for `defaultProps` on forwardRef components. `iconsax-react` relied on `defaultProps` for `size: 24`, `color: 'currentColor'`, and `variant: 'Linear'`, which caused icons to render with `stroke: undefined` (transparent) and collapsed size.
+  - Added [scripts/patch-iconsax.js](file:///d:/Code/React%20JS/bitbolt/scripts/patch-iconsax.js) and `postinstall` script in [package.json](file:///d:/Code/React%20JS/bitbolt/package.json) to patch `iconsax-react` default parameters across all 1986 icon files.
+  - Added `iconsaxReact19` transform plugin in [vite.config.js](file:///d:/Code/React%20JS/bitbolt/vite.config.js) and cleared Vite pre-bundled cache. All icons now render with default `currentColor` stroke, proper sizes, and linear style.
+- **Shop Loading Transition Guard (Prevent 0.5s "No products found" flash)**:
+  - In [ShopPage.jsx](file:///d:/Code/React%20JS/bitbolt/src/pages/ShopPage.jsx), introduced `currentKey` and `loadedKey` state tracking (`${categoryParam}::${searchQuery}`) and `isDataReady = !isLoading && loadedKey === currentKey`.
+  - Guarded against premature `setIsLoading(false)` on aborted fetches.
+  - Replaced immediate empty check with `!isDataReady ? <ProductGridSkeleton /> : filteredProducts.length === 0 ? ...`. Eliminates the 0.5s empty state flash when navigating between categories or loading new pages.
+- **Top Header Profile & Dropdown Removal**:
+  - Removed user profile avatar and dropdown menu from [TopHeader.jsx](file:///d:/Code/React%20JS/bitbolt/src/components/layout/TopHeader.jsx) per user request.
+  - Cleaned up unused state (`isUserMenuOpen`) and icon imports.
+- **Brand Name Uniformity ("BitBolt")**:
+  - Replaced "NovaShop" with "BitBolt" in [Sidebar.jsx](file:///d:/Code/React%20JS/bitbolt/src/components/layout/Sidebar.jsx), [RightCartSidebar.jsx](file:///d:/Code/React%20JS/bitbolt/src/components/layout/RightCartSidebar.jsx) ("Join BitBolt Club"), [NovaHomePage.jsx](file:///d:/Code/React%20JS/bitbolt/src/pages/NovaHomePage.jsx) footer copyright, and [curatedProducts.js](file:///d:/Code/React%20JS/bitbolt/src/data/curatedProducts.js).
+- **Icons Migration to Iconsax (https://app.iconsax.io/)**:
+  - Replaced `lucide-react` icons across the entire codebase with `iconsax-react` (v0.0.8).
+  - All icons default to `Linear` variant (not showing bold by default per user specification).
+  - Configured `Bold` variant exclusively for active/toggled states (e.g. favorited heart `variant={isFavorite ? "Bold" : "Linear"}` and star ratings).
+  - Mapped icon equivalents across all components:
+    - Navigation & actions: `ArrowLeft`, `ArrowRight`, `ArrowLeft2`, `ArrowRight2`, `ArrowDown2`, `ArrowUp2`, `CloseCircle`, `TickCircle`, `TickSquare`, `Add`, `Minus`, `Trash`.
+    - Shopping & commerce: `ShoppingBag`, `Bag2`, `Card`, `TruckFast`, `ShieldTick`, `RotateLeft`, `Box`, `TicketDiscount`.
+    - UI & category indicators: `SearchNormal1`, `HambergerMenu`, `Heart`, `Star1`, `Flash`, `Cup`, `MagicStar`, `FilterSearch`, `Woman`, `Mobile`, `House`, `Activity`, `Category`, `Notification`, `User`, `Logout`, `Sun1`, `Moon`, `Setting2`, `Headphone`, `Send2`, `Message`, `Camera`, `Code`, `ExportCurve`, `Location`.
+  - Replaced broken multi-line prop formatting in `RightCartSidebar.jsx` and verified `npm run lint` and `npm run build` pass with 0 errors.
 - **Dynamic Data & Real API Navigation**:
   - Replaced static mock items (`CURATED_DEALS`, `CURATED_RECOMMENDED`) in `NovaHomePage.jsx` with real live DummyJSON API products dynamically derived using `useMemo` (`discountPercentage >= 8` for deals and `rating >= 4.0` for recommended products). Eliminates broken `404` errors when clicking mock IDs (`990`, `991`, `992`).
   - Increased general catalog fetch limit from 30 to 60 in `useProducts.js` for richer initial data across all departments.

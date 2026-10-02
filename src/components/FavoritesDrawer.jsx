@@ -1,4 +1,4 @@
-import { X, ShoppingBag, Trash2, Heart } from "lucide-react";
+import { CloseCircle as X, ShoppingBag, Trash, Heart } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 
 import { useFavorites } from "../hooks/useFavorites";
@@ -36,7 +36,7 @@ export default function FavoritesDrawer({
         <div className="p-6 sm:p-8 flex justify-between items-center border-b border-neutral-100 dark:border-neutral-900">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <Heart size={16} className="text-red-500 fill-red-500" />
+              <Heart size={18} variant="Bold" className="text-red-500" />
               <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-white uppercase tracking-tight">
                 Wishlist
               </h2>
@@ -115,7 +115,7 @@ export default function FavoritesDrawer({
                         className="text-neutral-300 hover:text-red-500 transition-colors p-1"
                         aria-label="Remove from favorites"
                       >
-                        <Trash2 size={15} />
+                        <Trash size={16} variant="Linear" />
                       </button>
                     </div>
 
@@ -128,7 +128,7 @@ export default function FavoritesDrawer({
                         className="h-8 w-8 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 grid place-items-center shadow-sm hover:opacity-90 transition-opacity"
                         aria-label="Add to cart"
                       >
-                        <ShoppingBag size={14} />
+                        <ShoppingBag size={15} variant="Linear" />
                       </button>
                     </div>
                   </div>

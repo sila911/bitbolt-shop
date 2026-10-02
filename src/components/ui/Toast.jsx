@@ -1,4 +1,4 @@
-import { CheckCircle2, AlertCircle, X, Info } from "lucide-react";
+import { TickCircle as CheckCircle2, Danger as AlertCircle, CloseCircle as X, InfoCircle as Info } from "iconsax-react";
 import { useEffect, useState, useCallback } from "react";
 
 export default function Toast({ id, title, message, tone = "success", onClose }) {

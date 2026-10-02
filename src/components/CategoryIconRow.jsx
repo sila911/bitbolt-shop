@@ -1,41 +1,41 @@
-import { Shirt, Sparkles, Headphones, Armchair, Footprints, LayoutGrid } from "lucide-react";
+import { Woman, MagicStar, Mobile, House, Activity, Category } from "iconsax-react";
 
 export default function CategoryIconRow({ onSelectCategory, selectedCategory = "All" }) {
   const categories = [
     {
       label: "Fashion",
       slug: "mens-shirts",
-      icon: Shirt,
+      icon: Woman,
       bg: "bg-rose-50 text-rose-500 dark:bg-rose-950/40 dark:text-rose-400"
     },
     {
       label: "Beauty",
       slug: "beauty",
-      icon: Sparkles,
+      icon: MagicStar,
       bg: "bg-pink-50 text-pink-500 dark:bg-pink-950/40 dark:text-pink-400"
     },
     {
       label: "Electronics",
       slug: "smartphones",
-      icon: Headphones,
+      icon: Mobile,
       bg: "bg-indigo-50 text-indigo-500 dark:bg-indigo-950/40 dark:text-indigo-400"
     },
     {
       label: "Home & Living",
       slug: "furniture",
-      icon: Armchair,
+      icon: House,
       bg: "bg-amber-50 text-amber-500 dark:bg-amber-950/40 dark:text-amber-400"
     },
     {
       label: "Sports",
       slug: "mens-shoes",
-      icon: Footprints,
+      icon: Activity,
       bg: "bg-sky-50 text-sky-500 dark:bg-sky-950/40 dark:text-sky-400"
     },
     {
       label: "More",
       slug: "All",
-      icon: LayoutGrid,
+      icon: Category,
       bg: "bg-purple-50 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400"
     }
   ];
@@ -60,7 +60,7 @@ export default function CategoryIconRow({ onSelectCategory, selectedCategory = "
               <div
                 className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm ${item.bg}`}
               >
-                <Icon size={22} className="stroke-[2.2]" />
+                <Icon size={22} variant="Linear" />
               </div>
               <span className="text-[11px] sm:text-xs font-bold text-neutral-700 dark:text-neutral-300">
                 {item.label}

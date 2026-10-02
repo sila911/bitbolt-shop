@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, MagicStar as Sparkles } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 
 export default function NovaHeroBanner({ onShopClick }) {

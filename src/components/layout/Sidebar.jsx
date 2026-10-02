@@ -3,26 +3,26 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ShoppingBag,
   Home,
-  LayoutGrid,
+  Category as LayoutGrid,
   Tag,
-  Flame,
-  Trophy,
-  Diamond,
-  FolderHeart,
-  Package,
+  Flash as Flame,
+  Cup as Trophy,
+  Crown as Diamond,
+  FolderFavorite as FolderHeart,
+  Box as Package,
   Heart,
-  Ticket,
-  MapPin,
-  Settings,
-  Headphones,
-  Sun,
+  TicketDiscount as Ticket,
+  Location as MapPin,
+  Setting2 as Settings,
+  Headphone as Headphones,
+  Sun1 as Sun,
   Moon,
-  X,
-  ChevronRight,
-  ChevronDown,
-  ChevronUp,
+  CloseCircle as X,
+  ArrowRight2 as ChevronRight,
+  ArrowDown2 as ChevronDown,
+  ArrowUp2 as ChevronUp,
   ArrowRight,
-} from "lucide-react";
+} from "iconsax-react";
 import { fetchCategories } from "../../api";
 import { useFavorites } from "../../hooks/useFavorites";
 import { useTheme } from "../../hooks/useTheme";
@@ -195,11 +195,11 @@ export default function Sidebar({
       <div className="p-6 pb-5 flex items-center justify-between">
         <Link to="/" onClick={onClose} className="flex items-center gap-3 group">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#6c5ce7] to-[#a29bfe] flex items-center justify-center text-white shadow-md shadow-purple-500/20 group-hover:scale-105 transition-transform">
-            <ShoppingBag size={20} className="stroke-[2.5]" />
+            <ShoppingBag size={20} variant="Linear" />
           </div>
           <div className="flex flex-col">
             <span className="text-xl font-black tracking-tight text-neutral-900 dark:text-white leading-none">
-              Nova<span className="text-[#6c5ce7]">Shop</span>
+              Bit<span className="text-[#6c5ce7]">Bolt</span>
             </span>
           </div>
         </Link>

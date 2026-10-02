@@ -1,5 +1,4 @@
-
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight } from "iconsax-react";
 
 export default function Hero({ onShopClick, onViewLookbook }) {
   return (

@@ -1,4 +1,4 @@
-import { ShieldCheck, RotateCcw, Headphones, Star } from "lucide-react";
+import { ShieldTick as ShieldCheck, RotateLeft as RotateCcw, Headphone as Headphones, Star } from "iconsax-react";
 
 export default function TrustBadges() {
   const badges = [

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { ShoppingCart, Search, Heart, Moon, Sun, X } from "lucide-react";
+import { Bag2 as ShoppingCart, SearchNormal1 as Search, Heart, Moon, Sun1 as Sun, CloseCircle as X } from "iconsax-react";
 import { useCart } from "../../hooks/useCart";
 import { useFavorites } from "../../hooks/useFavorites";
 import { useTheme } from "../../hooks/useTheme";

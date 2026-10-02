@@ -136,7 +136,7 @@ export default function NovaHomePage({
           <TrustBadges />
 
           <footer className="pt-4 pb-8 text-center text-xs text-neutral-400 font-medium">
-            <p>© 2026 NovaShop. All rights reserved. • Curated Fashion, Beauty & Lifestyle</p>
+            <p>© 2026 BitBolt. All rights reserved. • Curated Fashion, Beauty & Lifestyle</p>
           </footer>
         </main>
       </div>

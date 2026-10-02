@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, CreditCard, ShieldCheck, Truck, ShoppingBag, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Card as CreditCard, ShieldTick as ShieldCheck, TruckFast as Truck, ShoppingBag, TickCircle as CheckCircle2 } from "iconsax-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import { useToast } from "../hooks/useToast";

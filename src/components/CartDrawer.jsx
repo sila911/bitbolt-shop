@@ -1,5 +1,5 @@
-import { X, Trash2, CreditCard, ShoppingBag, ArrowRight, Minus, Plus } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { CloseCircle as X, Trash as Trash2, Card as CreditCard, ShoppingBag, ArrowRight, Minus, Add as Plus } from "iconsax-react";
+import { useNavigate } from "react-router-dom";
 
 import { useCart } from '../hooks/useCart';
 

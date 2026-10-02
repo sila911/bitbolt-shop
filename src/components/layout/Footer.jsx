@@ -1,4 +1,4 @@
-import { MessageCircle, Send, Camera, Terminal, ArrowUpRight } from "lucide-react";
+import { Message as MessageCircle, Send2 as Send, Camera, Code as Terminal, ExportCurve as ArrowUpRight } from "iconsax-react";
 
 export default function Footer() {
   const links = {
