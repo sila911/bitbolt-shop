@@ -3,10 +3,10 @@ import { ToastProvider } from "./ToastContext";
 import { CartProvider } from "./CartContext";
 import { FavoritesProvider } from "./FavoritesContext";
 
-export * from "./ThemeContext";
-export * from "./ToastContext";
-export * from "./CartContext";
-export * from "./FavoritesContext";
+export { ThemeProvider } from "./ThemeContext";
+export { ToastProvider } from "./ToastContext";
+export { CartProvider } from "./CartContext";
+export { FavoritesProvider } from "./FavoritesContext";
 
 /**
  * Unified provider for the whole application

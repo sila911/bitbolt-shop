@@ -1,0 +1,29 @@
+# BitBolt Development Rules & Memory Bank Protocol
+
+## 1. Memory Bank Protocol (Mandatory)
+- **Always Read First**: At the start of every new task or coding request, read the core documentation in `memory-bank/`:
+  - `memory-bank/projectbrief.md`: Core product goals, requirements, and user flows.
+  - `memory-bank/techContext.md`: Tech stack, API endpoints, environment variables, and architecture.
+  - `memory-bank/activeContext.md`: Current sprint status, active decisions, recent fixes, and immediate next steps.
+- **Always Update on Change**: Whenever you make architectural changes, add/modify API endpoints, change environment variables, or complete a feature/task, update the corresponding `memory-bank/` files (`activeContext.md` and/or `techContext.md`) before finishing the turn.
+- **Source of Truth**: The active codebase is the ultimate ground truth. When documentation and code diverge, align the memory bank with verified code or seek clarification.
+
+---
+
+## 2. Code Quality & Standards
+- **Framework & Libraries**:
+  - React 19 (Functional components and modern hooks).
+  - React Router DOM 7 for navigation.
+  - Tailwind CSS 3 for styling (dark-mode first aesthetic with `dark:` variants).
+  - Lucide React for consistent iconography.
+- **Fast Refresh & ESLint**:
+  - Maintain 0 warnings and 0 errors under `npm run lint`.
+  - Ensure all component files strictly export components (or adhere to configured `allowExportNames` in `eslint.config.js`).
+  - Do not use wildcard `export *` in files containing React components.
+- **API & Asynchronous Data Fetching**:
+  - Always support and forward `AbortController.signal` to `fetch()` calls to prevent race conditions and memory leaks.
+  - Gracefully handle `AbortError` without triggering unhandled error toasts or crashes.
+  - Debounce user-driven search queries (minimum 300ms).
+- **Communication & Formatting**:
+  - Provide concise responses in GitHub-style markdown.
+  - Always provide clickable markdown links formatted as `[filename](file:///absolute/path/to/file)` using the `file://` scheme and forward slashes.

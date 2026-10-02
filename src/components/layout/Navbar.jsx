@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { ShoppingCart, Search, Heart, Moon, Sun, X } from "lucide-react";
 import { useCart } from "../../hooks/useCart";
 import { useFavorites } from "../../hooks/useFavorites";
@@ -18,7 +18,6 @@ export default function Navbar({
   isDarkMode: propIsDarkMode,
   onToggleDarkMode: propOnToggleDarkMode,
 }) {
-  const navigate = useNavigate();
   const cartContext = useCart();
   const favoritesContext = useFavorites();
   const themeContext = useTheme();

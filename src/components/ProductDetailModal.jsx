@@ -16,7 +16,6 @@ export default function ProductDetailModal({ product, isOpen, onClose, onAddToCa
   const favorited = isFavorite !== undefined ? isFavorite : favCtx?.isFavorite?.(product.id)
 
   const {
-    id,
     title,
     description,
     price,

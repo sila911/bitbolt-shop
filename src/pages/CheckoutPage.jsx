@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ArrowLeft, CreditCard, ShieldCheck, Truck, ShoppingBag, CheckCircle2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../hooks/useCart";

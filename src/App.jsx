@@ -23,7 +23,6 @@ import ExclusiveDropPage from "./pages/ExclusiveDropPage";
 // Hooks & Services
 import { useCart } from "./hooks/useCart";
 import { useFavorites } from "./hooks/useFavorites";
-import { useTheme } from "./hooks/useTheme";
 import { useToast } from "./hooks/useToast";
 import { useProducts } from "./hooks/useProducts";
 import { sendTelegramOrder } from "./services/telegramService";
@@ -36,17 +35,15 @@ export default function App() {
   // Context Hooks
   const { cart, cartTotal, setCart, isCartOpen, setIsCartOpen, isCheckoutInfoOpen, setIsCheckoutInfoOpen } = useCart();
   const { isFavoritesOpen, setIsFavoritesOpen } = useFavorites();
-  const { isDarkMode, toggleDarkMode } = useTheme();
   const { addToast } = useToast();
 
   // Local UI State
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [detailProduct, setDetailProduct] = useState(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   // Products Data
-  const { products, categories, isLoading, error } = useProducts(selectedCategory, searchTerm);
+  const { products } = useProducts("All", searchTerm);
 
   // Init Animations
   useEffect(() => {
