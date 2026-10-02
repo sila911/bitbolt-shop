@@ -32,11 +32,9 @@ export default function Navbar({
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const searchContainerRef = useRef(null);
   const inputRef = useRef(null);
-  const mobileInputRef = useRef(null);
 
   const [prevSearchTerm, setPrevSearchTerm] = useState(searchTerm);
   if (prevSearchTerm !== searchTerm) {
@@ -58,15 +56,13 @@ export default function Navbar({
     };
 
     const handleGlobalKeyDown = (event) => {
-      if (event.key === "/" && document.activeElement !== inputRef.current && document.activeElement !== mobileInputRef.current) {
+      if (event.key === "/" && document.activeElement !== inputRef.current) {
         event.preventDefault();
         inputRef.current?.focus();
       }
       if (event.key === "Escape") {
         setIsDropdownOpen(false);
-        setIsMobileSearchOpen(false);
         inputRef.current?.blur();
-        mobileInputRef.current?.blur();
       }
     };
 
@@ -92,11 +88,9 @@ export default function Navbar({
         event.preventDefault();
         onSelectSuggestion?.(searchSuggestions[highlightedIndex]);
         setIsDropdownOpen(false);
-        setIsMobileSearchOpen(false);
       } else if (searchTerm.trim()) {
         event.preventDefault();
         setIsDropdownOpen(false);
-        setIsMobileSearchOpen(false);
         navigate(`/shop?q=${encodeURIComponent(searchTerm.trim())}`);
       }
     }
@@ -203,9 +197,10 @@ export default function Navbar({
         {/* Right Action Icons */}
         <div className="flex items-center gap-2 sm:gap-3">
           <button
-            onClick={() => setIsMobileSearchOpen((prev) => !prev)}
+            onClick={() => navigate("/search")}
             className="md:hidden p-2 rounded-xl text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-            aria-label="Toggle mobile search"
+            aria-label="Search"
+            title="Search"
           >
             <Search size={18} />
           </button>
@@ -245,34 +240,6 @@ export default function Navbar({
           </button>
         </div>
       </div>
-
-      {/* Mobile Search Overlay */}
-      {isMobileSearchOpen && (
-        <div className="md:hidden px-4 pt-3 pb-2 bg-white/95 dark:bg-neutral-950/95 border-b border-neutral-200 dark:border-neutral-800">
-          <div className="relative">
-            <input
-              ref={mobileInputRef}
-              type="text"
-              value={searchTerm}
-              onChange={(e) => {
-                onSearchChange?.(e);
-                if (e.target.value.trim()) setIsDropdownOpen(true);
-              }}
-              onKeyDown={handleInputKeyDown}
-              placeholder="Search catalog..."
-              className="w-full bg-neutral-100 dark:bg-neutral-900 py-2.5 pl-10 pr-9 rounded-xl text-xs font-bold outline-none"
-              autoFocus
-            />
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" size={15} />
-            <button
-              onClick={() => setIsMobileSearchOpen(false)}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 p-1"
-            >
-              <X size={14} />
-            </button>
-          </div>
-        </div>
-      )}
     </nav>
   );
 }

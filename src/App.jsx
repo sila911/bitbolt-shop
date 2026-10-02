@@ -19,6 +19,7 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import LookbookPage from "./pages/LookbookPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ExclusiveDropPage from "./pages/ExclusiveDropPage";
+import SearchPage from "./pages/SearchPage";
 
 // Hooks & Services
 import { useCart } from "./hooks/useCart";
@@ -31,6 +32,7 @@ export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const isSearchPage = location.pathname === "/search";
 
   // Context Hooks
   const { cart, cartTotal, setCart, isCartOpen, setIsCartOpen, isCheckoutInfoOpen, setIsCheckoutInfoOpen } = useCart();
@@ -79,8 +81,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#f4f5f9] dark:bg-[#0c0c0e] text-neutral-900 dark:text-neutral-100 transition-colors duration-300">
-      {/* Navbar (outside Home) */}
-      {!isHome && (
+      {/* Navbar (outside Home and Search) */}
+      {!isHome && !isSearchPage && (
         <Navbar
           searchTerm={searchTerm}
           onSearchChange={(e) => setSearchTerm(e.target.value)}
@@ -113,6 +115,7 @@ export default function App() {
           }
         />
         <Route path="/shop" element={<ShopPage />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="/product/:id" element={<ProductDetailPage />} />
         <Route path="/lookbook" element={<LookbookPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
@@ -137,8 +140,8 @@ export default function App() {
         isSubmitting={isCheckingOut}
       />
 
-      {/* Footer (outside Home) */}
-      {!isHome && <Footer />}
+      {/* Footer (outside Home and Search) */}
+      {!isHome && !isSearchPage && <Footer />}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 
 import { useState, useRef, useEffect } from "react";
-import { SearchNormal1 as Search, Heart, Notification as Bell, HambergerMenu as Menu, Bag2 as ShoppingCart } from "iconsax-react";
+import { SearchNormal1 as Search, Heart, HambergerMenu as Menu, Bag2 as ShoppingCart } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 import { useFavorites } from "../../hooks/useFavorites";
@@ -50,8 +50,8 @@ export default function TopHeader({
           <Menu size={20} />
         </button>
 
-        {/* Search Bar */}
-        <div className="flex-1 max-w-2xl relative" ref={searchRef}>
+        {/* Search Bar (Desktop full bar) */}
+        <div className="hidden lg:flex flex-1 max-w-2xl relative" ref={searchRef}>
           <div className="relative w-full">
             <input
               type="text"
@@ -124,7 +124,17 @@ export default function TopHeader({
         </div>
 
         {/* Right Action Icons */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Search Icon Only (Tablet & Phone) */}
+          <button
+            onClick={() => navigate("/search")}
+            className="lg:hidden p-2.5 rounded-2xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300 transition-colors flex items-center justify-center"
+            title="Search"
+            aria-label="Search"
+          >
+            <Search size={18} />
+          </button>
+
           <button
             onClick={onOpenFavorites}
             className="relative p-2.5 rounded-2xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300 transition-colors flex items-center gap-1.5"
@@ -138,18 +148,6 @@ export default function TopHeader({
                 {favoritesCount}
               </span>
             )}
-          </button>
-
-          <button
-            onClick={() => {}}
-            className="relative p-2.5 rounded-2xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300 transition-colors"
-            title="Notifications"
-            aria-label="Notifications"
-          >
-            <Bell size={18} />
-            <span className="absolute top-1.5 right-1.5 bg-rose-500 text-white text-[9px] font-black h-4 w-4 rounded-full flex items-center justify-center">
-              3
-            </span>
           </button>
 
           {/* Cart Toggle */}

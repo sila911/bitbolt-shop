@@ -10,6 +10,17 @@
 ---
 
 ## Recent Changes & Fixes
+- **Mobile/Tablet Search Icon Only & Dedicated `/search` Page**:
+  - In [TopHeader.jsx](file:///d:/Code/React%20JS/bitbolt/src/components/layout/TopHeader.jsx), made full search bar desktop-only (`hidden lg:flex`), and added a search icon button for tablet and phone (`lg:hidden`) that navigates directly to `/search`.
+  - In [Navbar.jsx](file:///d:/Code/React%20JS/bitbolt/src/components/layout/Navbar.jsx), updated mobile search icon to route to `/search`.
+  - Created [SearchPage.jsx](file:///d:/Code/React%20JS/bitbolt/src/pages/SearchPage.jsx) matching the user's mobile search interface design:
+    - Back navigation button with auto-focusing search capsule input.
+    - Two visual discovery lookbook cards with curated links.
+    - Interactive "Popular searches" pill tags (`Smartphones`, `Sneakers`, `Hoodie`, `Perfume`, etc.) and recent search history with localStorage persistence.
+    - Debounced real-time live search with matching product cards and direct navigation to product details or search results.
+  - Added `/search` route in [App.jsx](file:///d:/Code/React%20JS/bitbolt/src/App.jsx) and suppressed duplicate header/footer on `/search`.
+- **Notification Icon Removal**:
+  - Removed notification Bell icon and badge button from [TopHeader.jsx](file:///d:/Code/React%20JS/bitbolt/src/components/layout/TopHeader.jsx) per user request.
 - **Iconsax React 19 Display Fix & Compatibility**:
   - Identified root cause of icons not rendering: React 19 removed support for `defaultProps` on forwardRef components. `iconsax-react` relied on `defaultProps` for `size: 24`, `color: 'currentColor'`, and `variant: 'Linear'`, which caused icons to render with `stroke: undefined` (transparent) and collapsed size.
   - Added [scripts/patch-iconsax.js](file:///d:/Code/React%20JS/bitbolt/scripts/patch-iconsax.js) and `postinstall` script in [package.json](file:///d:/Code/React%20JS/bitbolt/package.json) to patch `iconsax-react` default parameters across all 1986 icon files.
