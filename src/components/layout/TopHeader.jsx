@@ -130,15 +130,17 @@ export default function TopHeader({
             </span>
           </button>
 
-          {/* Mobile Cart Toggle */}
+          {/* Cart Toggle */}
           <button
             onClick={onOpenCart}
-            className="xl:hidden relative p-2.5 rounded-2xl bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
-            aria-label="Open Cart"
+            className="relative p-2.5 rounded-2xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300 transition-colors flex items-center gap-1.5"
+            aria-label="Toggle Cart"
+            title="Cart"
           >
             <ShoppingCart size={18} />
+            <span className="hidden md:inline text-xs font-semibold">Cart</span>
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#6c5ce7] text-white text-[10px] font-black h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center">
+              <span className="bg-[#6c5ce7] text-white text-[10px] font-black h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center">
                 {cartCount}
               </span>
             )}

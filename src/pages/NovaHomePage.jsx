@@ -48,7 +48,13 @@ export default function NovaHomePage({
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
+  const [isDesktopCartOpen, setIsDesktopCartOpen] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const handleToggleCart = () => {
+    setIsMobileCartOpen((prev) => !prev);
+    setIsDesktopCartOpen((prev) => !prev);
+  };
 
   const dealProducts =
     products.length >= 4 ? [...CURATED_DEALS, ...products.slice(0, 4)] : CURATED_DEALS;
@@ -76,7 +82,7 @@ export default function NovaHomePage({
           favoritesCount={favoritesCount}
           cartCount={cart.reduce((s, i) => s + i.quantity, 0)}
           onOpenSidebar={() => setIsSidebarOpen(true)}
-          onOpenCart={() => setIsMobileCartOpen(true)}
+          onOpenCart={handleToggleCart}
         />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-7 space-y-6 sm:space-y-8 max-w-7xl w-full mx-auto">
@@ -126,15 +132,8 @@ export default function NovaHomePage({
         onRemove={handleRemoveFromCart}
         onAddToCart={handleAddToCart}
         allProducts={dealProducts}
-      />
-
-      <RightCartSidebar
-        cart={cart}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemove={handleRemoveFromCart}
-        onAddToCart={handleAddToCart}
-        allProducts={dealProducts}
-        isDrawer={true}
+        isDesktopOpen={isDesktopCartOpen}
+        onCloseDesktop={() => setIsDesktopCartOpen(false)}
         isOpen={isMobileCartOpen}
         onClose={() => setIsMobileCartOpen(false)}
       />

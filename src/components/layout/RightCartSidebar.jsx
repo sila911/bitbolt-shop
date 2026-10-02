@@ -11,6 +11,8 @@ export default function RightCartSidebar({
   isOpen = false,
   onClose,
   isDrawer = false,
+  isDesktopOpen = true,
+  onCloseDesktop,
   allProducts = [],
 }) {
   const navigate = useNavigate();
@@ -61,16 +63,16 @@ export default function RightCartSidebar({
     { id: 4, img: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&q=80&w=150" },
   ];
 
-  const content = (
+  const renderContent = (handleClose) => (
     <div className="flex flex-col h-full bg-white dark:bg-neutral-900 border-l border-neutral-200/80 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 select-none">
       <div className="p-5 pb-4 flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800/80">
         <h3 className="text-base font-black text-neutral-900 dark:text-white">
           My Cart <span className="text-neutral-400 font-bold">({cartCount})</span>
         </h3>
-        {isDrawer && (
+        {handleClose && (
           <button
-            onClick={onClose}
-            className="p-1.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
+            onClick={handleClose}
+            className="p-1.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
             aria-label="Close cart"
           >
             <X size={18} />
@@ -266,17 +268,31 @@ export default function RightCartSidebar({
     </div>
   );
 
+  if (isDrawer) {
+    if (!isOpen) return null;
+    return (
+      <div className="xl:hidden fixed inset-0 z-50 flex justify-end">
+        <div className="fixed inset-0 bg-neutral-950/40 backdrop-blur-sm transition-opacity" onClick={onClose} />
+        <div className="relative w-84 max-w-[85vw] h-full shadow-2xl z-10 animate-in slide-in-from-right duration-200">
+          {renderContent(onClose)}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      <aside className="hidden xl:block w-80 2xl:w-[350px] flex-shrink-0 sticky top-0 h-screen z-20">
-        {content}
-      </aside>
+      {isDesktopOpen && (
+        <aside className="hidden xl:block w-80 2xl:w-[350px] flex-shrink-0 sticky top-0 h-screen z-20">
+          {renderContent(onCloseDesktop || onClose)}
+        </aside>
+      )}
 
-      {isDrawer && isOpen && (
+      {isOpen && (
         <div className="xl:hidden fixed inset-0 z-50 flex justify-end">
           <div className="fixed inset-0 bg-neutral-950/40 backdrop-blur-sm transition-opacity" onClick={onClose} />
           <div className="relative w-84 max-w-[85vw] h-full shadow-2xl z-10 animate-in slide-in-from-right duration-200">
-            {content}
+            {renderContent(onClose)}
           </div>
         </div>
       )}

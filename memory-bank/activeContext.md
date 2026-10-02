@@ -10,6 +10,10 @@
 ---
 
 ## Recent Changes & Fixes
+- **Cart Sidebar UI Fix (Duplicate Cart & Close Button)**:
+  - Resolved duplicate cart sidebar bug on desktop (`xl+`) where `NovaHomePage.jsx` mounted two instances of `RightCartSidebar` and `RightCartSidebar.jsx` unconditionally rendered `<aside className="hidden xl:block">`.
+  - Added desktop closing support (`isDesktopOpen` and `onCloseDesktop`) with active `X` button and `TopHeader` Cart toggle button.
+  - Unified `RightCartSidebar` in `NovaHomePage.jsx` to a single instance handling both desktop sticky sidebar and mobile slide-over drawer.
 - **HTML Document Hygiene (UTF-8 early declaration)**:
   - Verified and positioned `<meta charset="UTF-8" />` as the first tag inside `<head>` in `index.html` (within the first 1024 bytes), followed by the viewport meta tag and resources, ensuring universal character rendering and standard conformance.
 - **Agent Skills Installed (mattpocock/skills)**:
