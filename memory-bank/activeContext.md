@@ -10,6 +10,17 @@
 ---
 
 ## Recent Changes & Fixes
+- **HTML Document Hygiene (UTF-8 early declaration)**:
+  - Verified and positioned `<meta charset="UTF-8" />` as the first tag inside `<head>` in `index.html` (within the first 1024 bytes), followed by the viewport meta tag and resources, ensuring universal character rendering and standard conformance.
+- **Agent Skills Installed (mattpocock/skills)**:
+  - Installed 37 engineering, design, architecture, and workflow skills into `.agents/skills` via `npx skills@latest add mattpocock/skills -y`.
+  - Added [skills-lock.json](file:///d:/Code/React%20JS/bitbolt/skills-lock.json) tracking installed skills and versions.
+- **Toast System Upgrade (goey-toast)**:
+  - Installed `goey-toast` and peer dependency `framer-motion`.
+  - Imported `goey-toast/styles.css` in `src/main.jsx`.
+  - Replaced custom toast DOM rendering in `src/components/ui/ToastManager.jsx` with `<GoeyToaster position="top-right" theme={isDarkMode ? "dark" : "light"} richColors closeButton duration={4000} />`.
+  - Updated `src/context/ToastContext.jsx` to route `addToast` calls through `goeyToast.success/error/warning/info` with title, description, and deduplication ID.
+  - Re-exported `toast` from `src/hooks/useToast.js` for flexible usage.
 - **ESLint & Fast Refresh Resolution**:
   - `eslint.config.js`: Added `allowExportNames: ['CartContext', 'FavoritesContext', 'ThemeContext', 'ToastContext']` for `react-refresh/only-export-components`.
   - `src/pages/CheckoutPage.jsx`: Added missing `import { useState } from "react"`.

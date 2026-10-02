@@ -11,6 +11,8 @@
 - **PostCSS / Autoprefixer**: `^8.5.8` / `^10.4.27`
 - **Lucide React**: `^1.7.0` (Icon set across all views)
 - **AOS (Animate On Scroll)**: `^2.3.4` (Scroll animations initialized on app load and product changes)
+- **goey-toast**: `^0.5.0` (Gooey morphing toast notifications built on Sonner with organic blob animations)
+- **framer-motion**: `^12.34.0` (Animation engine powering gooey toast morphing and physics)
 
 ---
 
@@ -71,7 +73,7 @@ Located in `src/data/curatedProducts.js`:
 - `CartContext`: Manages item list, quantity updates, total pricing, and cart drawer visibility. Persisted in `localStorage` under `bitbolt-cart`.
 - `FavoritesContext`: Manages wishlist IDs and drawer visibility. Persisted in `localStorage` under `bitbolt-favorites`.
 - `ThemeContext`: Dark/light mode state, automatically syncing with `localStorage` (`bitbolt-theme`) and toggling the `.dark` class on `document.documentElement`.
-- `ToastContext`: Dynamic notifications with auto-dismiss timers and deduplication keys.
+- `ToastContext`: Gooey morphing notifications powered by `goey-toast` (`GoeyToaster`) with theme sync, deduplication, and tone mapping (`success`, `error`, `warning`, `info`).
 - `AppProviders`: Unified wrapper in `src/main.jsx` providing all contexts in hierarchy.
 
 ### Custom Hooks (`src/hooks/`)

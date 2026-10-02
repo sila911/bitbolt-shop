@@ -1,31 +1,34 @@
-import { createContext, useCallback, useState } from "react";
+import { createContext, useCallback } from "react";
+import { goeyToast } from "goey-toast";
 
 export const ToastContext = createContext(null);
 
 export function ToastProvider({ children }) {
-  const [toasts, setToasts] = useState([]);
-
   const addToast = useCallback((title, message, tone = "success", dedupeKey = null) => {
-    const id = Date.now();
+    const options = {
+      description: message,
+      id: dedupeKey || undefined,
+    };
 
-    setToasts((prev) => {
-      const isDuplicate = prev.some((t) => {
-        if (dedupeKey && t.dedupeKey === dedupeKey) return true;
-        if (!dedupeKey && t.title === title && typeof t.message === "string" && t.message === message) return true;
-        return false;
-      });
-
-      if (isDuplicate) return prev;
-      return [...prev, { id, title, message, tone, dedupeKey }];
-    });
+    switch (tone) {
+      case "error":
+        return goeyToast.error(title, options);
+      case "warning":
+        return goeyToast.warning(title, options);
+      case "info":
+        return goeyToast.info(title, options);
+      case "success":
+      default:
+        return goeyToast.success(title, options);
+    }
   }, []);
 
   const removeToast = useCallback((id) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+    goeyToast.dismiss(id);
   }, []);
 
   return (
-    <ToastContext.Provider value={{ toasts, addToast, removeToast }}>
+    <ToastContext.Provider value={{ addToast, removeToast, toast: goeyToast }}>
       {children}
     </ToastContext.Provider>
   );
