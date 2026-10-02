@@ -63,6 +63,12 @@ export default function TopHeader({
               onFocus={() => {
                 if (searchTerm.trim()) setIsDropdownOpen(true);
               }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && searchTerm.trim()) {
+                  setIsDropdownOpen(false);
+                  navigate(`/shop?q=${encodeURIComponent(searchTerm.trim())}`);
+                }
+              }}
               placeholder="Search for products, brands and more..."
               className="w-full bg-neutral-100 dark:bg-neutral-800/90 border border-transparent focus:border-[#6c5ce7] py-2.5 px-4 pr-10 rounded-2xl outline-none text-xs sm:text-sm font-medium transition-all placeholder:text-neutral-400 text-neutral-800 dark:text-neutral-100"
             />
@@ -78,7 +84,11 @@ export default function TopHeader({
                     key={product.id}
                     onClick={() => {
                       setIsDropdownOpen(false);
-                      onSelectSuggestion?.(product);
+                      if (onSelectSuggestion) {
+                        onSelectSuggestion(product);
+                      } else {
+                        navigate(`/product/${product.id}`);
+                      }
                     }}
                     className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-left transition-colors"
                   >
@@ -96,6 +106,18 @@ export default function TopHeader({
                     <span className="text-xs font-black text-neutral-900 dark:text-white">${product.price}</span>
                   </button>
                 ))}
+
+                <div className="pt-1 mt-1 border-t border-neutral-100 dark:border-neutral-800">
+                  <button
+                    onClick={() => {
+                      setIsDropdownOpen(false);
+                      navigate(`/shop?q=${encodeURIComponent(searchTerm.trim())}`);
+                    }}
+                    className="w-full text-center py-2 px-3 text-xs font-bold text-[#6c5ce7] dark:text-[#a29bfe] hover:bg-neutral-100 dark:hover:bg-neutral-800/80 rounded-xl transition-colors"
+                  >
+                    View all results for &ldquo;{searchTerm}&rdquo; &rarr;
+                  </button>
+                </div>
               </div>
             </div>
           )}

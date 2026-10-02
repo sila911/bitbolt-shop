@@ -13,15 +13,16 @@ export default function NovaHeroBanner({ onShopClick }) {
       subtitle: "Discover the latest trends in fashion, beauty, and lifestyle.",
       buttonText: "Shop Now",
       gradient: "from-[#8b7df8] via-[#ba8cf9] to-[#f093b0]",
-      // Stylish model in lavender hoodie with glasses
+      link: "/shop?filter=new-arrivals",
       image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800"
     },
     {
       tag: "Summer Drop",
       title: "Elevate Your Everyday Essentials ⚡",
       subtitle: "Curated premium gadgets and contemporary accessories.",
-      buttonText: "Explore Now",
+      buttonText: "Explore Deals",
       gradient: "from-[#6c5ce7] via-[#a29bfe] to-[#fd79a8]",
+      link: "/shop?filter=deals",
       image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=800"
     },
     {
@@ -30,6 +31,7 @@ export default function NovaHeroBanner({ onShopClick }) {
       subtitle: "Precision engineering crafted for your modern workflow.",
       buttonText: "Discover Tech",
       gradient: "from-[#4834d4] via-[#686de0] to-[#e056fd]",
+      link: "/shop?category=smartphones",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"
     }
   ];
@@ -73,8 +75,13 @@ export default function NovaHeroBanner({ onShopClick }) {
           <div className="pt-2">
             <button
               onClick={() => {
-                if (onShopClick) onShopClick();
-                else navigate("/shop");
+                if (current.link) {
+                  navigate(current.link);
+                } else if (onShopClick) {
+                  onShopClick();
+                } else {
+                  navigate("/shop");
+                }
               }}
               className="bg-white text-[#6c5ce7] hover:bg-neutral-50 px-6 sm:px-7 py-3 rounded-full text-xs font-black uppercase tracking-wider inline-flex items-center gap-2.5 shadow-md shadow-purple-900/10 hover:scale-105 active:scale-95 transition-all"
             >

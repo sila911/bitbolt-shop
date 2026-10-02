@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { ShoppingCart, Search, Heart, Moon, Sun, X } from "lucide-react";
 import { useCart } from "../../hooks/useCart";
 import { useFavorites } from "../../hooks/useFavorites";
@@ -18,6 +18,7 @@ export default function Navbar({
   isDarkMode: propIsDarkMode,
   onToggleDarkMode: propOnToggleDarkMode,
 }) {
+  const navigate = useNavigate();
   const cartContext = useCart();
   const favoritesContext = useFavorites();
   const themeContext = useTheme();
@@ -78,19 +79,25 @@ export default function Navbar({
   }, []);
 
   const handleInputKeyDown = (event) => {
-    if (!isDropdownOpen || !searchSuggestions?.length) return;
     if (event.key === "ArrowDown") {
+      if (!isDropdownOpen || !searchSuggestions?.length) return;
       event.preventDefault();
       setHighlightedIndex((prev) => (prev < searchSuggestions.length - 1 ? prev + 1 : prev));
     } else if (event.key === "ArrowUp") {
+      if (!isDropdownOpen || !searchSuggestions?.length) return;
       event.preventDefault();
       setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : -1));
     } else if (event.key === "Enter") {
-      if (highlightedIndex >= 0) {
+      if (highlightedIndex >= 0 && searchSuggestions?.[highlightedIndex]) {
         event.preventDefault();
         onSelectSuggestion?.(searchSuggestions[highlightedIndex]);
         setIsDropdownOpen(false);
         setIsMobileSearchOpen(false);
+      } else if (searchTerm.trim()) {
+        event.preventDefault();
+        setIsDropdownOpen(false);
+        setIsMobileSearchOpen(false);
+        navigate(`/shop?q=${encodeURIComponent(searchTerm.trim())}`);
       }
     }
   };
@@ -251,6 +258,7 @@ export default function Navbar({
                 onSearchChange?.(e);
                 if (e.target.value.trim()) setIsDropdownOpen(true);
               }}
+              onKeyDown={handleInputKeyDown}
               placeholder="Search catalog..."
               className="w-full bg-neutral-100 dark:bg-neutral-900 py-2.5 pl-10 pr-9 rounded-xl text-xs font-bold outline-none"
               autoFocus

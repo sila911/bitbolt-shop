@@ -38,7 +38,7 @@ export function useProducts(selectedCategory = "All", searchTerm = "") {
         } else if (selectedCategory !== "All") {
           data = await fetchProductsByCategory(selectedCategory, controller.signal);
         } else {
-          data = await fetchAllProducts(30, 0, controller.signal);
+          data = await fetchAllProducts(60, 0, controller.signal);
         }
 
         if (data !== null) {

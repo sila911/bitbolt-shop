@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ShoppingBag,
@@ -18,8 +19,11 @@ import {
   Moon,
   X,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   ArrowRight,
 } from "lucide-react";
+import { fetchCategories } from "../../api";
 import { useFavorites } from "../../hooks/useFavorites";
 import { useTheme } from "../../hooks/useTheme";
 
@@ -42,64 +46,109 @@ export default function Sidebar({
   const isDarkMode = propIsDarkMode ?? themeCtx?.isDarkMode ?? false;
   const onToggleDarkMode = propOnToggleDarkMode ?? themeCtx?.toggleDarkMode;
 
+  const [categories, setCategories] = useState([]);
+  const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchCategories()
+      .then((cats) => {
+        if (isMounted && Array.isArray(cats)) {
+          setCategories(cats);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const searchParams = new URLSearchParams(location.search);
+  const currentCategory = searchParams.get("category");
+  const currentFilter = searchParams.get("filter");
+  const currentSort = searchParams.get("sort");
+
   const primaryNav = [
-    { label: "Home", icon: Home, path: "/" },
     {
-      label: "Categories",
-      icon: LayoutGrid,
-      path: "/shop",
+      label: "Home",
+      icon: Home,
+      path: "/",
+      isActive: activePath === "/" && !location.search,
       action: () => {
-        onCategorySelect?.("All");
-        navigate("/shop");
+        navigate("/");
         onClose?.();
       },
     },
     {
+      label: "Categories",
+      icon: LayoutGrid,
+      path: "/shop",
+      isCategorySection: true,
+      badge: categories.length > 0 ? String(categories.length) : null,
+      badgeColor: "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400",
+      isActive: Boolean(currentCategory),
+    },
+    {
       label: "Deals",
       icon: Tag,
-      path: "/deals",
+      path: "/shop?filter=deals",
       badge: "Hot",
       badgeColor: "bg-rose-500 text-white",
+      isActive: currentFilter === "deals",
       action: () => {
-        navigate("/shop");
+        navigate("/shop?filter=deals");
         onClose?.();
       },
     },
     {
       label: "New Arrivals",
       icon: Flame,
-      path: "/new-arrivals",
+      path: "/shop?filter=new-arrivals",
+      badge: "New",
+      badgeColor: "bg-amber-500 text-white",
+      isActive: currentFilter === "new-arrivals",
       action: () => {
-        navigate("/shop");
+        navigate("/shop?filter=new-arrivals");
         onClose?.();
       },
     },
     {
       label: "Best Sellers",
       icon: Trophy,
-      path: "/best-sellers",
+      path: "/shop?filter=best-sellers",
+      isActive: currentFilter === "best-sellers",
       action: () => {
-        navigate("/shop");
+        navigate("/shop?filter=best-sellers");
         onClose?.();
       },
     },
     {
-      label: "Brands",
+      label: "Top Rated",
       icon: Diamond,
-      path: "/brands",
+      path: "/shop?sort=rating",
+      isActive: currentSort === "rating",
       action: () => {
-        navigate("/shop");
+        navigate("/shop?sort=rating");
         onClose?.();
       },
     },
-    { label: "Collections", icon: FolderHeart, path: "/lookbook" },
+    {
+      label: "Collections",
+      icon: FolderHeart,
+      path: "/lookbook",
+      isActive: activePath === "/lookbook",
+      action: () => {
+        navigate("/lookbook");
+        onClose?.();
+      },
+    },
   ];
 
   const secondaryNav = [
     {
       label: "My Orders",
       icon: Package,
-      path: "/orders",
+      path: "/checkout",
       action: () => {
         navigate("/checkout");
         onClose?.();
@@ -108,13 +157,37 @@ export default function Sidebar({
     {
       label: "Wishlist",
       icon: Heart,
-      path: "/wishlist",
       badge: favoritesCount > 0 ? String(favoritesCount) : null,
       badgeColor: "bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300",
+      action: () => {
+        favoritesCtx?.setIsFavoritesOpen?.(true);
+        onClose?.();
+      },
     },
-    { label: "Coupons", icon: Ticket, path: "/coupons" },
-    { label: "Addresses", icon: MapPin, path: "/addresses" },
-    { label: "Account Settings", icon: Settings, path: "/settings" },
+    {
+      label: "Coupons",
+      icon: Ticket,
+      action: () => {
+        navigate("/shop?filter=deals");
+        onClose?.();
+      },
+    },
+    {
+      label: "Checkout",
+      icon: MapPin,
+      action: () => {
+        navigate("/checkout");
+        onClose?.();
+      },
+    },
+    {
+      label: "Settings",
+      icon: Settings,
+      action: () => {
+        navigate("/checkout");
+        onClose?.();
+      },
+    },
   ];
 
   const sidebarContent = (
@@ -146,7 +219,77 @@ export default function Sidebar({
         <div className="space-y-1">
           {primaryNav.map((item) => {
             const Icon = item.icon;
-            const isActive = activePath === item.path && !item.action;
+            const isActive = item.isActive;
+
+            if (item.isCategorySection) {
+              return (
+                <div key={item.label} className="space-y-1">
+                  <button
+                    onClick={() => setIsCategoriesExpanded((prev) => !prev)}
+                    className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-bold transition-all ${
+                      isActive
+                        ? "bg-[#6c5ce7] text-white shadow-md shadow-purple-500/25"
+                        : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon size={18} className={isActive ? "text-white" : "text-neutral-400 dark:text-neutral-500"} />
+                      <span>{item.label}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      {item.badge && (
+                        <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${item.badgeColor}`}>
+                          {item.badge}
+                        </span>
+                      )}
+                      {isCategoriesExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                    </div>
+                  </button>
+
+                  {isCategoriesExpanded && (
+                    <div className="pl-6 pr-1 py-1 space-y-0.5 max-h-48 overflow-y-auto no-scrollbar border-l-2 border-neutral-100 dark:border-neutral-800 ml-4">
+                      <button
+                        onClick={() => {
+                          onCategorySelect?.("All");
+                          navigate("/shop");
+                          onClose?.();
+                        }}
+                        className={`w-full text-left px-2.5 py-1.5 rounded-xl text-[11px] font-semibold transition-colors flex items-center justify-between ${
+                          !currentCategory && activePath === "/shop"
+                            ? "bg-purple-100 text-[#6c5ce7] dark:bg-purple-950/60 dark:text-purple-300 font-bold"
+                            : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
+                        }`}
+                      >
+                        <span>All Collections</span>
+                      </button>
+                      {categories.map((cat) => {
+                        const slug = typeof cat === "string" ? cat : cat.slug;
+                        const name = typeof cat === "string" ? cat : cat.name;
+                        const isCatActive = currentCategory === slug;
+
+                        return (
+                          <button
+                            key={slug}
+                            onClick={() => {
+                              onCategorySelect?.(slug);
+                              navigate(`/shop?category=${encodeURIComponent(slug)}`);
+                              onClose?.();
+                            }}
+                            className={`w-full text-left px-2.5 py-1.5 rounded-xl text-[11px] font-medium transition-colors flex items-center justify-between capitalize truncate ${
+                              isCatActive
+                                ? "bg-purple-100 text-[#6c5ce7] dark:bg-purple-950/60 dark:text-purple-300 font-bold"
+                                : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
+                            }`}
+                          >
+                            <span className="truncate">{name?.replace(/-/g, " ")}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            }
 
             return (
               <button
@@ -227,7 +370,7 @@ export default function Sidebar({
             </div>
             <button
               onClick={() => {
-                navigate("/shop");
+                navigate("/shop?filter=deals");
                 onClose?.();
               }}
               className="bg-white text-[#6c5ce7] hover:bg-neutral-100 px-4 py-1.5 rounded-xl text-xs font-bold transition-transform active:scale-95 shadow-sm inline-flex items-center gap-1.5"

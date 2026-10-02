@@ -10,6 +10,20 @@
 ---
 
 ## Recent Changes & Fixes
+- **Dynamic Data & Real API Navigation**:
+  - Replaced static mock items (`CURATED_DEALS`, `CURATED_RECOMMENDED`) in `NovaHomePage.jsx` with real live DummyJSON API products dynamically derived using `useMemo` (`discountPercentage >= 8` for deals and `rating >= 4.0` for recommended products). Eliminates broken `404` errors when clicking mock IDs (`990`, `991`, `992`).
+  - Increased general catalog fetch limit from 30 to 60 in `useProducts.js` for richer initial data across all departments.
+  - Upgraded `ShopPage.jsx` to full `useSearchParams` query-string synchronization:
+    - Reads and drives `?category=...`, `?filter=deals|new-arrivals|best-sellers`, `?q=...`, and `?sort=featured|price-low|price-high|rating|discount|name`.
+    - Directly fetches via `fetchProductsByCategory(slug)` and `searchProducts(q)` when URL parameters are present.
+    - Added interactive quick-filter tabs ("⚡ Hot Deals", "🔥 New Arrivals", "🏆 Best Sellers") and clearable filter tags.
+  - Upgraded `Sidebar.jsx`:
+    - Loaded live categories from `fetchCategories()` into an expandable taxonomy menu with direct `/shop?category=${cat.slug}` routes.
+    - Wired "Deals" to `/shop?filter=deals`, "New Arrivals" to `/shop?filter=new-arrivals`, "Best Sellers" to `/shop?filter=best-sellers`, "Top Rated" to `/shop?sort=rating`, "Wishlist" to open the favorites drawer, and "Summer Sale" promo card to `/shop?filter=deals`.
+  - Wired `NovaHeroBanner.jsx` slides to themed routes (`/shop?filter=new-arrivals`, `/shop?filter=deals`, `/shop?category=smartphones`).
+  - Wired `PromoCardsRow.jsx` to `/shop?filter=deals` (Flash Sale) and `/shop?filter=new-arrivals` (New Arrivals).
+  - Added Enter key search routing to `TopHeader.jsx` and `Navbar.jsx` (`/shop?q=${query}`) with "View all results" option in dropdowns.
+  - Linked `ProductDetailPage.jsx` category, brand, and related products header directly to `/shop?category=...` and `/shop?q=...`.
 - **Cart Sidebar UI Fix (Duplicate Cart & Close Button)**:
   - Resolved duplicate cart sidebar bug on desktop (`xl+`) where `NovaHomePage.jsx` mounted two instances of `RightCartSidebar` and `RightCartSidebar.jsx` unconditionally rendered `<aside className="hidden xl:block">`.
   - Added desktop closing support (`isDesktopOpen` and `onCloseDesktop`) with active `X` button and `TopHeader` Cart toggle button.
@@ -29,7 +43,7 @@
   - `eslint.config.js`: Added `allowExportNames: ['CartContext', 'FavoritesContext', 'ThemeContext', 'ToastContext']` for `react-refresh/only-export-components`.
   - `src/pages/CheckoutPage.jsx`: Added missing `import { useState } from "react"`.
   - `src/App.jsx`: Removed unused `useTheme`, `selectedCategory` state, and unused `useProducts` return values (`categories`, `isLoading`, `error`).
-  - `src/components/layout/Navbar.jsx`: Removed unused `useNavigate` import and unused `navigate` constant.
+  - `src/components/layout/Navbar.jsx`: Added `useNavigate` for Enter key routing and fixed variable references.
   - `src/components/ProductDetailModal.jsx`: Removed unused `id` from product destructuring.
   - `src/components/ProductSkeleton.jsx`: Replaced `export *` with explicit named and default component exports (`ProductSkeleton`, `ProductGridSkeleton`).
   - `src/context/index.jsx`: Replaced wildcard exports `export *` with explicit component provider exports.

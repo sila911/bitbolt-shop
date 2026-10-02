@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/layout/Sidebar";
 import TopHeader from "../components/layout/TopHeader";
@@ -8,7 +8,6 @@ import CategoryIconRow from "../components/CategoryIconRow";
 import PromoCardsRow from "../components/ui/PromoCardsRow";
 import NovaProductRail from "../components/NovaProductRail";
 import TrustBadges from "../components/ui/TrustBadges";
-import { CURATED_DEALS, CURATED_RECOMMENDED } from "../data/curatedProducts";
 import { useCart } from "../hooks/useCart";
 import { useFavorites } from "../hooks/useFavorites";
 import { useTheme } from "../hooks/useTheme";
@@ -56,11 +55,23 @@ export default function NovaHomePage({
     setIsDesktopCartOpen((prev) => !prev);
   };
 
-  const dealProducts =
-    products.length >= 4 ? [...CURATED_DEALS, ...products.slice(0, 4)] : CURATED_DEALS;
+  // Derive deals dynamically from live API products with discount percentage
+  const dealProducts = useMemo(() => {
+    if (!products || products.length === 0) return [];
+    const deals = [...products]
+      .filter((p) => (p.discountPercentage || 0) >= 8)
+      .sort((a, b) => (b.discountPercentage || 0) - (a.discountPercentage || 0));
+    return deals.length >= 4 ? deals : products.slice(0, 8);
+  }, [products]);
 
-  const recommendedProducts =
-    products.length >= 8 ? [...CURATED_RECOMMENDED, ...products.slice(4, 8)] : CURATED_RECOMMENDED;
+  // Derive recommended products dynamically from live API products with top ratings
+  const recommendedProducts = useMemo(() => {
+    if (!products || products.length === 0) return [];
+    const top = [...products]
+      .filter((p) => (p.rating || 0) >= 4.0)
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    return top.length >= 4 ? top : products.slice(4, 12);
+  }, [products]);
 
   return (
     <div className="min-h-screen bg-[#f4f5f9] dark:bg-[#0c0c0e] text-neutral-900 dark:text-neutral-100 flex transition-colors">
@@ -92,7 +103,11 @@ export default function NovaHomePage({
             selectedCategory={selectedCategory}
             onSelectCategory={(slug) => {
               setSelectedCategory(slug);
-              handleShopClick();
+              if (slug === "All") {
+                navigate("/shop");
+              } else {
+                navigate(`/shop?category=${encodeURIComponent(slug)}`);
+              }
             }}
           />
 
@@ -105,7 +120,7 @@ export default function NovaHomePage({
             onAddToCart={handleAddToCart}
             onToggleFavorite={handleToggleFavorite}
             isFavorite={checkIsFavorite}
-            viewAllLink="/shop"
+            viewAllLink="/shop?filter=deals"
           />
 
           <NovaProductRail
@@ -115,7 +130,7 @@ export default function NovaHomePage({
             onAddToCart={handleAddToCart}
             onToggleFavorite={handleToggleFavorite}
             isFavorite={checkIsFavorite}
-            viewAllLink="/shop"
+            viewAllLink="/shop?filter=best-sellers"
           />
 
           <TrustBadges />
@@ -131,7 +146,7 @@ export default function NovaHomePage({
         onUpdateQuantity={handleUpdateQuantity}
         onRemove={handleRemoveFromCart}
         onAddToCart={handleAddToCart}
-        allProducts={dealProducts}
+        allProducts={products.length > 0 ? products : dealProducts}
         isDesktopOpen={isDesktopCartOpen}
         onCloseDesktop={() => setIsDesktopCartOpen(false)}
         isOpen={isMobileCartOpen}

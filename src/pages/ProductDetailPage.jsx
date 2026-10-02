@@ -244,15 +244,21 @@ export default function ProductDetailPage({
           <div className="lg:col-span-6 space-y-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[11px] font-bold uppercase tracking-widest text-neutral-400">
+                <Link
+                  to={`/shop?category=${encodeURIComponent(category)}`}
+                  className="text-[11px] font-bold uppercase tracking-widest text-[#6c5ce7] dark:text-[#a29bfe] hover:underline"
+                >
                   {category ? category.replace("-", " ") : "Catalog"}
-                </span>
+                </Link>
                 {brand && (
                   <>
                     <span className="text-neutral-300 dark:text-neutral-700">•</span>
-                    <span className="text-[11px] font-bold uppercase tracking-widest text-neutral-500">
+                    <Link
+                      to={`/shop?q=${encodeURIComponent(brand)}`}
+                      className="text-[11px] font-bold uppercase tracking-widest text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    >
                       {brand}
-                    </span>
+                    </Link>
                   </>
                 )}
               </div>
@@ -449,10 +455,10 @@ export default function ProductDetailPage({
                 More in {category.replace("-", " ")}
               </h2>
               <Link
-                to="/shop"
+                to={`/shop?category=${encodeURIComponent(category)}`}
                 className="text-xs font-bold text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
               >
-                View Catalog →
+                View all in {category?.replace("-", " ")} →
               </Link>
             </div>
 

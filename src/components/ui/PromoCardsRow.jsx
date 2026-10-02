@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +26,7 @@ export default function PromoCardsRow() {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {/* 1. Flash Sale */}
       <div
-        onClick={() => navigate("/shop")}
+        onClick={() => navigate("/shop?filter=deals")}
         className="rounded-3xl p-5 bg-[#fdf0f2] dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 flex items-center justify-between cursor-pointer group hover:shadow-md transition-all relative overflow-hidden"
       >
         <div className="space-y-1.5 z-10">
@@ -83,7 +84,7 @@ export default function PromoCardsRow() {
 
       {/* 3. New Arrivals */}
       <div
-        onClick={() => navigate("/shop")}
+        onClick={() => navigate("/shop?filter=new-arrivals")}
         className="rounded-3xl p-5 bg-[#fef4eb] dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/30 flex items-center justify-between cursor-pointer group hover:shadow-md transition-all relative overflow-hidden sm:col-span-2 md:col-span-1"
       >
         <div className="space-y-1.5 z-10">
