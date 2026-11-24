@@ -42,37 +42,32 @@ export default function RightCartSidebar({
   const recommendations = allProducts.length >= 2 ? allProducts.slice(0, 2) : [
     {
       id: 991,
-      title: "Ray-Ban Wayfarer",
-      category: "Classic Black",
+      title: "Audio Studio Monitor",
+      category: "Acoustics",
       price: 155.0,
-      thumbnail: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&q=80&w=200",
+      thumbnail: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=200",
     },
     {
       id: 992,
-      title: "Nike Air Force 1 '07",
-      category: "White",
-      price: 109.99,
-      thumbnail: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=200",
+      title: "Mechanical Switch Kit",
+      category: "Peripherals",
+      price: 49.99,
+      thumbnail: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&q=80&w=200",
     },
   ];
 
-  const recentlyViewed = [
-    { id: 1, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=150" },
-    { id: 2, img: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&q=80&w=150" },
-    { id: 3, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&q=80&w=150" },
-    { id: 4, img: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&q=80&w=150" },
-  ];
+
 
   const renderContent = (handleClose) => (
-    <div className="flex flex-col h-full bg-white dark:bg-neutral-900 border-l border-neutral-200/80 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 select-none">
-      <div className="p-5 pb-4 flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800/80">
-        <h3 className="text-base font-black text-neutral-900 dark:text-white">
-          My Cart <span className="text-neutral-400 font-bold">({cartCount})</span>
+    <div className="flex flex-col h-full bg-zinc-950 border-l border-zinc-800 text-zinc-200 select-none">
+      <div className="p-4 sm:p-5 flex items-center justify-between border-b border-zinc-850">
+        <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">
+          Current Order <span className="text-zinc-500 font-normal tabular-nums">({cartCount})</span>
         </h3>
         {handleClose && (
           <button
             onClick={handleClose}
-            className="p-1.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+            className="p-1 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors cursor-pointer"
             aria-label="Close cart"
           >
             <X size={18} />
@@ -80,63 +75,63 @@ export default function RightCartSidebar({
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-6">
+      <div className="flex-1 overflow-y-auto p-4 space-y-5">
         {cart.length === 0 ? (
-          <div className="text-center py-10 space-y-2">
-            <p className="text-sm font-bold text-neutral-500">Your bag is empty</p>
-            <p className="text-xs text-neutral-400">Add some curated items to get started!</p>
+          <div className="text-center py-8 space-y-1">
+            <p className="text-xs font-semibold text-zinc-400">Order queue is empty</p>
+            <p className="text-[11px] text-zinc-600">Add hardware items to begin checkout.</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {cart.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-3 p-2.5 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200/60 dark:border-neutral-700/60 group"
+                className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900 border border-zinc-850 group"
               >
                 <div
                   onClick={() => navigate(`/product/${item.id}`)}
-                  className="w-14 h-14 rounded-xl bg-white dark:bg-neutral-800 flex items-center justify-center p-1 flex-shrink-0 cursor-pointer overflow-hidden"
+                  className="w-12 h-12 rounded-lg bg-zinc-950 border border-zinc-800 flex items-center justify-center p-1 shrink-0 cursor-pointer overflow-hidden"
                 >
                   <img
                     src={item.thumbnail}
                     alt={item.title}
-                    className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal group-hover:scale-105 transition-transform"
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform"
                   />
                 </div>
 
-                <div className="flex-1 min-w-0 space-y-1">
+                <div className="flex-1 min-w-0 space-y-0.5">
                   <h4
                     onClick={() => navigate(`/product/${item.id}`)}
-                    className="text-xs font-bold text-neutral-900 dark:text-white truncate cursor-pointer hover:underline"
+                    className="text-xs font-semibold text-zinc-100 truncate cursor-pointer hover:underline"
                   >
                     {item.title}
                   </h4>
-                  <p className="text-[10px] text-neutral-400 truncate">{item.brand || item.category || "Item"}</p>
-                  <p className="text-xs font-black text-neutral-900 dark:text-white">${item.price.toFixed(2)}</p>
+                  <p className="text-[10px] text-zinc-500 uppercase tracking-wider truncate">{item.brand || item.category || "Hardware"}</p>
+                  <p className="text-xs font-bold text-white tabular-nums">${item.price.toFixed(2)}</p>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1 bg-white dark:bg-neutral-800 rounded-lg p-0.5 border border-neutral-200/70 dark:border-neutral-700 text-xs">
+                <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-0.5 bg-zinc-950 rounded-lg p-0.5 border border-zinc-800 text-xs">
                     <button
                       onClick={() => onUpdateQuantity?.(item.id, -1)}
-                      className="w-5 h-5 rounded flex items-center justify-center text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                      className="w-5 h-5 rounded flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 cursor-pointer"
                       aria-label="Decrease"
                     >
-                      <Minus size={11} />
+                      <Minus size={10} />
                     </button>
-                    <span className="w-4 text-center font-bold text-[11px]">{item.quantity}</span>
+                    <span className="w-4 text-center font-semibold text-[11px] tabular-nums text-zinc-300">{item.quantity}</span>
                     <button
                       onClick={() => onUpdateQuantity?.(item.id, 1)}
-                      className="w-5 h-5 rounded flex items-center justify-center text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                      className="w-5 h-5 rounded flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 cursor-pointer"
                       aria-label="Increase"
                     >
-                      <Plus size={11} />
+                      <Plus size={10} />
                     </button>
                   </div>
 
                   <button
                     onClick={() => onRemove?.(item.id)}
-                    className="p-1 text-neutral-300 hover:text-rose-500 transition-colors"
+                    className="p-1 text-zinc-500 hover:text-rose-400 transition-colors cursor-pointer"
                     aria-label="Remove item"
                   >
                     <Trash2 size={13} />
@@ -147,122 +142,101 @@ export default function RightCartSidebar({
           </div>
         )}
 
+        {/* Promo code */}
         <div className="flex items-center gap-2">
           <input
             type="text"
             value={promoCode}
             onChange={(e) => setPromoCode(e.target.value)}
-            placeholder="Promo Code"
-            className="flex-1 bg-neutral-100 dark:bg-neutral-800/80 border border-transparent focus:border-[#6c5ce7] px-3 py-2 rounded-xl text-xs font-medium outline-none placeholder:text-neutral-400"
+            placeholder="Discount code"
+            className="flex-1 bg-zinc-900 border border-zinc-800 focus:border-zinc-600 px-3 py-2 rounded-xl text-xs font-medium outline-none text-zinc-100 placeholder:text-zinc-500 transition-colors"
           />
           <button
             onClick={handleApplyPromo}
-            className="bg-[#6c5ce7] hover:bg-[#5b4cc4] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
+            className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700/60 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all active:scale-95 cursor-pointer"
           >
             Apply
           </button>
         </div>
 
-        <div className="space-y-2 pt-2 border-t border-neutral-100 dark:border-neutral-800/80 text-xs font-semibold">
-          <div className="flex justify-between text-neutral-500 dark:text-neutral-400">
+        {/* Summary */}
+        <div className="space-y-1.5 pt-2 border-t border-zinc-850 text-xs font-medium">
+          <div className="flex justify-between text-zinc-400">
             <span>Subtotal</span>
-            <span className="text-neutral-900 dark:text-white">${subtotal.toFixed(2)}</span>
+            <span className="text-zinc-200 font-semibold tabular-nums">${subtotal.toFixed(2)}</span>
           </div>
           {discountAmount > 0 && (
-            <div className="flex justify-between text-rose-500">
-              <span>Discount</span>
-              <span>-${discountAmount.toFixed(2)}</span>
+            <div className="flex justify-between text-rose-400">
+              <span>Promo applied</span>
+              <span className="tabular-nums">-${discountAmount.toFixed(2)}</span>
             </div>
           )}
-          <div className="flex justify-between text-neutral-500 dark:text-neutral-400">
+          <div className="flex justify-between text-zinc-400">
             <span>Shipping</span>
-            <span className="text-emerald-500 font-bold">Free</span>
+            <span className="text-emerald-400 font-medium">Free</span>
           </div>
-          <div className="flex justify-between text-sm font-black text-neutral-900 dark:text-white pt-2 border-t border-neutral-100 dark:border-neutral-800/80">
-            <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+          <div className="flex justify-between text-sm font-bold text-white pt-2 border-t border-zinc-850">
+            <span>Estimated Total</span>
+            <span className="tabular-nums">${total.toFixed(2)}</span>
           </div>
         </div>
 
         <button
           onClick={() => navigate("/checkout")}
           disabled={cart.length === 0}
-          className="w-full bg-[#6c5ce7] hover:bg-[#5b4cc4] text-white py-3 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-purple-500/20 active:scale-98 transition-all disabled:opacity-50"
+          className="w-full bg-zinc-100 hover:bg-white text-zinc-950 py-2.5 rounded-xl font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-2 active:scale-95 transition-all shadow-sm cursor-pointer disabled:opacity-50"
         >
-          <Lock size={13} />
+          <Lock size={12} />
           <span>Checkout ({cartCount})</span>
-          <ArrowRight size={13} />
+          <ArrowRight size={13} className="stroke-[2.5]" />
         </button>
 
-        <div className="flex items-center justify-center gap-3 pt-1 text-[10px] text-neutral-400 font-medium">
-          <span>We accept:</span>
-          <span className="font-bold text-neutral-600 dark:text-neutral-300">VISA</span>
-          <span className="font-bold text-neutral-600 dark:text-neutral-300">MC</span>
-          <span className="font-bold text-neutral-600 dark:text-neutral-300">Apple Pay</span>
-          <span className="font-bold text-neutral-600 dark:text-neutral-300">G Pay</span>
-        </div>
-
-        <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800/80 space-y-3">
-          <h4 className="text-xs font-black text-neutral-900 dark:text-white">You might also like</h4>
-          <div className="space-y-2.5">
+        <div className="pt-3 border-t border-zinc-850 space-y-2.5">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Recommended Hardware</h4>
+          <div className="space-y-2">
             {recommendations.map((rec) => (
               <div
                 key={rec.id}
-                className="flex items-center justify-between p-2 rounded-2xl hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors group"
+                className="flex items-center justify-between p-2 rounded-xl bg-zinc-900 border border-zinc-850 transition-colors group"
               >
-                <div onClick={() => navigate(`/product/${rec.id}`)} className="flex items-center gap-3 min-w-0 cursor-pointer">
+                <div onClick={() => navigate(`/product/${rec.id}`)} className="flex items-center gap-2.5 min-w-0 cursor-pointer">
                   <img
                     src={rec.thumbnail}
                     alt={rec.title}
-                    className="w-11 h-11 rounded-xl object-contain bg-neutral-100 dark:bg-neutral-800 p-1 flex-shrink-0"
+                    className="w-10 h-10 rounded-lg object-contain bg-zinc-950 p-1 shrink-0 border border-zinc-800"
                   />
                   <div className="min-w-0">
-                    <p className="text-xs font-bold text-neutral-800 dark:text-neutral-200 truncate group-hover:text-[#6c5ce7]">
+                    <p className="text-xs font-medium text-zinc-200 truncate group-hover:text-white">
                       {rec.title}
                     </p>
-                    <p className="text-[10px] text-neutral-400 capitalize truncate">{rec.category}</p>
-                    <p className="text-xs font-black text-neutral-900 dark:text-white">${rec.price.toFixed(2)}</p>
+                    <p className="text-[10px] text-zinc-500 uppercase tracking-wider truncate">{rec.category}</p>
+                    <p className="text-xs font-bold text-white tabular-nums">${rec.price.toFixed(2)}</p>
                   </div>
                 </div>
 
                 <button
                   onClick={() => onAddToCart?.(rec)}
-                  className="w-7 h-7 rounded-full bg-[#6c5ce7] hover:bg-[#5b4cc4] text-white flex items-center justify-center shadow-xs flex-shrink-0 active:scale-90 transition-transform"
+                  className="w-6 h-6 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 flex items-center justify-center border border-zinc-700/60 shrink-0 active:scale-90 transition-transform cursor-pointer"
                   aria-label={`Add ${rec.title}`}
                 >
-                  <PlusIcon size={14} />
+                  <PlusIcon size={12} />
                 </button>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800/80 space-y-2.5">
-          <h4 className="text-xs font-black text-neutral-900 dark:text-white">Recently Viewed</h4>
-          <div className="grid grid-cols-4 gap-2">
-            {recentlyViewed.map((item, idx) => (
-              <div
-                key={idx}
-                className="aspect-square rounded-xl bg-neutral-100 dark:bg-neutral-800 overflow-hidden p-1 cursor-pointer hover:ring-2 hover:ring-[#6c5ce7] transition-all"
-              >
-                <img src={item.img} alt={`Recently viewed ${idx + 1}`} className="w-full h-full object-cover rounded-lg" />
-              </div>
-            ))}
+        {/* Member spec card */}
+        <div className="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-white">Direct Telegram Dispatch</span>
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              Live
+            </span>
           </div>
-        </div>
-
-        <div className="p-4 rounded-3xl bg-gradient-to-br from-[#6c5ce7] to-[#8c7bf7] text-white relative overflow-hidden shadow-lg shadow-purple-500/15">
-          <div className="relative z-10 space-y-2 max-w-[70%]">
-            <h5 className="text-xs font-black leading-tight">Join BitBolt Club</h5>
-            <p className="text-[10px] text-white/80 leading-snug">Get exclusive offers, early access and more!</p>
-            <button
-              onClick={() => navigate("/checkout")}
-              className="mt-2 bg-white text-[#6c5ce7] hover:bg-neutral-100 px-3.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm transition-transform active:scale-95"
-            >
-              Join Now
-            </button>
-          </div>
-          <div className="absolute -bottom-2 -right-2 text-4xl select-none opacity-90 drop-shadow-md">👑🛍️</div>
+          <p className="text-[11px] text-zinc-400 leading-relaxed font-normal">
+            Orders are formatted directly and transmitted to our dispatch desk via bot integration.
+          </p>
         </div>
       </div>
     </div>
@@ -272,7 +246,7 @@ export default function RightCartSidebar({
     if (!isOpen) return null;
     return (
       <div className="xl:hidden fixed inset-0 z-50 flex justify-end">
-        <div className="fixed inset-0 bg-neutral-950/40 backdrop-blur-sm transition-opacity" onClick={onClose} />
+        <div className="fixed inset-0 bg-black/60 transition-opacity" onClick={onClose} />
         <div className="relative w-84 max-w-[85vw] h-full shadow-2xl z-10 animate-in slide-in-from-right duration-200">
           {renderContent(onClose)}
         </div>
@@ -283,14 +257,14 @@ export default function RightCartSidebar({
   return (
     <>
       {isDesktopOpen && (
-        <aside className="hidden xl:block w-80 2xl:w-[350px] flex-shrink-0 sticky top-0 h-screen z-20">
+        <aside className="hidden xl:block w-80 2xl:w-[350px] shrink-0 sticky top-0 h-screen z-20">
           {renderContent(onCloseDesktop || onClose)}
         </aside>
       )}
 
       {isOpen && (
         <div className="xl:hidden fixed inset-0 z-50 flex justify-end">
-          <div className="fixed inset-0 bg-neutral-950/40 backdrop-blur-sm transition-opacity" onClick={onClose} />
+          <div className="fixed inset-0 bg-black/60 transition-opacity" onClick={onClose} />
           <div className="relative w-84 max-w-[85vw] h-full shadow-2xl z-10 animate-in slide-in-from-right duration-200">
             {renderContent(onClose)}
           </div>

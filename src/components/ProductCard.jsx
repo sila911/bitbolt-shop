@@ -34,18 +34,18 @@ export default function ProductCard({
   return (
     <article
       onClick={handleCardClick}
-      className="bg-white dark:bg-neutral-900 border border-neutral-200/70 dark:border-neutral-800/80 w-full rounded-2xl p-3 cursor-pointer group hover:border-neutral-400 dark:hover:border-neutral-600 transition-all duration-200 flex flex-col justify-between"
+      className="bg-zinc-900 border border-zinc-800 hover:border-zinc-700 w-full rounded-xl p-3 cursor-pointer group transition-all duration-200 flex flex-col justify-between shadow-sm"
     >
       <div>
-        <div className="relative aspect-square rounded-xl overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/50 flex-shrink-0">
+        <div className="relative aspect-square rounded-lg overflow-hidden bg-zinc-950 border border-zinc-850 flex items-center justify-center p-3 shrink-0">
           <img
             src={thumbnail}
             alt={title}
-            className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
           />
 
           {discountPercentage > 0 && (
-            <span className="absolute top-2 left-2 bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-[10px] font-bold px-2 py-0.5 rounded-md">
+            <span className="absolute top-2 left-2 bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-semibold px-1.5 py-0.5 rounded tabular-nums">
               -{Math.round(discountPercentage)}%
             </span>
           )}
@@ -55,38 +55,38 @@ export default function ProductCard({
               e.stopPropagation();
               handleToggleFavorite?.(product);
             }}
-            className="absolute top-2 right-2 h-8 w-8 grid place-items-center bg-white/90 dark:bg-neutral-900/90 backdrop-blur-sm rounded-full shadow-sm hover:scale-110 active:scale-95 transition-transform"
-            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            className="absolute top-2 right-2 h-7 w-7 sm:h-8 sm:w-8 grid place-items-center bg-zinc-900/90 border border-zinc-800/80 rounded-lg shadow-sm hover:bg-zinc-800 active:scale-95 transition-all cursor-pointer"
+            aria-label={isFavorite ? "Remove from wishlist" : "Add to wishlist"}
           >
-            <Heart size={16} variant={isFavorite ? "Bold" : "Linear"} className={isFavorite ? "text-rose-500" : "text-neutral-400"} />
+            <Heart size={14} variant={isFavorite ? "Bold" : "Linear"} className={isFavorite ? "text-rose-400" : "text-zinc-400"} />
           </button>
         </div>
 
-        <div className="pt-3">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 truncate max-w-[70%]">
+        <div className="pt-3 space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 truncate max-w-[70%]">
               {formatCategoryName(category)}
             </span>
-            <div className="flex items-center gap-1 text-[11px] font-bold text-neutral-600 dark:text-neutral-300">
-              <Star size={13} variant="Bold" className="text-amber-400" />
-              <span>{rating}</span>
+            <div className="flex items-center gap-1 text-xs text-zinc-300">
+              <Star size={12} variant="Bold" className="text-amber-400" />
+              <span className="font-semibold tabular-nums">{rating}</span>
             </div>
           </div>
 
-          <h3 className="font-bold text-neutral-900 dark:text-neutral-100 text-xs sm:text-sm leading-snug line-clamp-2">
+          <h3 className="font-semibold text-zinc-100 text-xs sm:text-sm leading-snug line-clamp-2 group-hover:text-white transition-colors">
             {title}
           </h3>
         </div>
       </div>
 
-      <div className="pt-3 mt-auto flex items-center justify-between">
+      <div className="pt-3 mt-auto flex items-center justify-between border-t border-zinc-800/80">
         <div>
           {discountPercentage > 0 && (
-            <span className="text-[10px] text-neutral-400 line-through block">
+            <span className="text-xs text-zinc-500 line-through tabular-nums block font-normal">
               ${originalPrice.toLocaleString()}
             </span>
           )}
-          <span className="text-sm sm:text-base font-black text-neutral-900 dark:text-white">
+          <span className="text-sm sm:text-base font-bold text-white tabular-nums">
             ${price.toLocaleString()}
           </span>
         </div>
@@ -97,10 +97,10 @@ export default function ProductCard({
             e.stopPropagation();
             handleAddToCart?.(product);
           }}
-          className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 grid place-items-center hover:opacity-90 active:scale-90 transition-all shadow-sm"
+          className="h-8 w-8 rounded-lg bg-zinc-100 hover:bg-white text-zinc-950 grid place-items-center active:scale-90 transition-all cursor-pointer shadow-xs"
           aria-label={`Add ${title} to cart`}
         >
-          <ShoppingBag size={14} className="pointer-events-none" />
+          <ShoppingBag size={14} />
         </button>
       </div>
     </article>

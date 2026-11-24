@@ -1,48 +1,48 @@
-import { Woman, MagicStar, Mobile, House, Activity, Category } from "iconsax-react";
+import { Woman, Brush, Mobile, House, Activity, Category } from "iconsax-react";
 
 export default function CategoryIconRow({ onSelectCategory, selectedCategory = "All" }) {
   const categories = [
     {
-      label: "Fashion",
+      label: "Audio & Wearables",
       slug: "mens-shirts",
       icon: Woman,
-      bg: "bg-rose-50 text-rose-500 dark:bg-rose-950/40 dark:text-rose-400"
+      bg: "bg-zinc-800/80 text-zinc-200 border border-zinc-700/60"
     },
     {
-      label: "Beauty",
+      label: "Keyboards & Tools",
       slug: "beauty",
-      icon: MagicStar,
-      bg: "bg-pink-50 text-pink-500 dark:bg-pink-950/40 dark:text-pink-400"
+      icon: Brush,
+      bg: "bg-zinc-800/80 text-zinc-200 border border-zinc-700/60"
     },
     {
       label: "Electronics",
       slug: "smartphones",
       icon: Mobile,
-      bg: "bg-indigo-50 text-indigo-500 dark:bg-indigo-950/40 dark:text-indigo-400"
+      bg: "bg-zinc-800/80 text-zinc-200 border border-zinc-700/60"
     },
     {
-      label: "Home & Living",
+      label: "Desk Setup",
       slug: "furniture",
       icon: House,
-      bg: "bg-amber-50 text-amber-500 dark:bg-amber-950/40 dark:text-amber-400"
+      bg: "bg-zinc-800/80 text-zinc-200 border border-zinc-700/60"
     },
     {
-      label: "Sports",
+      label: "Accessories",
       slug: "mens-shoes",
       icon: Activity,
-      bg: "bg-sky-50 text-sky-500 dark:bg-sky-950/40 dark:text-sky-400"
+      bg: "bg-zinc-800/80 text-zinc-200 border border-zinc-700/60"
     },
     {
-      label: "More",
+      label: "All Hardware",
       slug: "All",
       icon: Category,
-      bg: "bg-purple-50 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400"
+      bg: "bg-zinc-800/80 text-zinc-200 border border-zinc-700/60"
     }
   ];
 
   return (
-    <div className="bg-white dark:bg-neutral-900 border border-neutral-200/70 dark:border-neutral-800 rounded-3xl p-4 sm:p-5 shadow-sm">
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 sm:gap-4">
+    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-3 sm:p-4 shadow-sm">
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3">
         {categories.map((item) => {
           const Icon = item.icon;
           const isSelected = selectedCategory === item.slug;
@@ -51,18 +51,18 @@ export default function CategoryIconRow({ onSelectCategory, selectedCategory = "
             <button
               key={item.label}
               onClick={() => onSelectCategory(item.slug)}
-              className={`flex flex-col items-center gap-2 p-2.5 rounded-2xl transition-all group ${
+              className={`flex flex-col items-center gap-2 p-2.5 rounded-lg transition-all group cursor-pointer ${
                 isSelected
-                  ? "ring-2 ring-[#6c5ce7] bg-purple-50/50 dark:bg-purple-950/30"
-                  : "hover:bg-neutral-50 dark:hover:bg-neutral-800/60"
+                  ? "bg-zinc-800 border border-zinc-600 text-white"
+                  : "hover:bg-zinc-850 text-zinc-400 hover:text-zinc-200"
               }`}
             >
               <div
-                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm ${item.bg}`}
+                className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105 ${item.bg}`}
               >
-                <Icon size={22} variant="Linear" />
+                <Icon size={18} variant="Linear" />
               </div>
-              <span className="text-[11px] sm:text-xs font-bold text-neutral-700 dark:text-neutral-300">
+              <span className="text-[11px] font-medium tracking-tight truncate max-w-full">
                 {item.label}
               </span>
             </button>

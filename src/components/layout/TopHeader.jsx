@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { SearchNormal1 as Search, Heart, HambergerMenu as Menu, Bag2 as ShoppingCart } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
@@ -39,15 +38,15 @@ export default function TopHeader({
   }, []);
 
   return (
-    <header className="sticky top-0 z-20 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-neutral-200/70 dark:border-neutral-800/80 px-4 sm:px-6 py-3 transition-colors">
+    <header className="sticky top-0 z-20 bg-zinc-950 border-b border-zinc-800 px-4 sm:px-6 py-3 transition-colors">
       <div className="flex items-center justify-between gap-4">
         {/* Mobile menu trigger */}
         <button
           onClick={onOpenSidebar}
-          className="lg:hidden p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white"
+          className="lg:hidden p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white cursor-pointer"
           aria-label="Open navigation menu"
         >
-          <Menu size={20} />
+          <Menu size={18} />
         </button>
 
         {/* Search Bar (Desktop full bar) */}
@@ -69,16 +68,16 @@ export default function TopHeader({
                   navigate(`/shop?q=${encodeURIComponent(searchTerm.trim())}`);
                 }
               }}
-              placeholder="Search for products, brands and more..."
-              className="w-full bg-neutral-100 dark:bg-neutral-800/90 border border-transparent focus:border-[#6c5ce7] py-2.5 px-4 pr-10 rounded-2xl outline-none text-xs sm:text-sm font-medium transition-all placeholder:text-neutral-400 text-neutral-800 dark:text-neutral-100"
+              placeholder="Search hardware, keyboards, audio..."
+              className="w-full bg-zinc-900 border border-zinc-800 focus:border-zinc-600 py-2.5 px-4 pr-10 rounded-xl outline-none text-xs sm:text-sm font-medium transition-all placeholder:text-zinc-500 text-zinc-100"
             />
-            <Search size={18} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+            <Search size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
           </div>
 
           {/* Search Suggestions Dropdown */}
           {isDropdownOpen && searchTerm.trim() && searchSuggestions.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-xl overflow-hidden z-30">
-              <div className="max-h-[360px] overflow-y-auto no-scrollbar p-2">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl overflow-hidden z-30">
+              <div className="max-h-[360px] overflow-y-auto p-2 space-y-1">
                 {searchSuggestions.slice(0, 6).map((product) => (
                   <button
                     key={product.id}
@@ -90,30 +89,30 @@ export default function TopHeader({
                         navigate(`/product/${product.id}`);
                       }
                     }}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-left transition-colors"
+                    className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-zinc-800 text-left transition-colors cursor-pointer"
                   >
                     <img
                       src={product.thumbnail}
                       alt={product.title}
-                      className="w-10 h-10 rounded-lg object-contain bg-neutral-100 dark:bg-neutral-800 p-1"
+                      className="w-9 h-9 rounded-md object-contain bg-zinc-950 border border-zinc-800 p-1 shrink-0"
                     />
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-bold text-neutral-900 dark:text-white truncate">{product.title}</h4>
-                      <p className="text-[10px] text-neutral-400 uppercase tracking-wider">
+                      <h4 className="text-xs font-semibold text-zinc-100 truncate">{product.title}</h4>
+                      <p className="text-[10px] text-zinc-500 uppercase tracking-wider">
                         {product.category?.replace("-", " ")}
                       </p>
                     </div>
-                    <span className="text-xs font-black text-neutral-900 dark:text-white">${product.price}</span>
+                    <span className="text-xs font-bold text-white tabular-nums">${product.price}</span>
                   </button>
                 ))}
 
-                <div className="pt-1 mt-1 border-t border-neutral-100 dark:border-neutral-800">
+                <div className="pt-1 mt-1 border-t border-zinc-800">
                   <button
                     onClick={() => {
                       setIsDropdownOpen(false);
                       navigate(`/shop?q=${encodeURIComponent(searchTerm.trim())}`);
                     }}
-                    className="w-full text-center py-2 px-3 text-xs font-bold text-[#6c5ce7] dark:text-[#a29bfe] hover:bg-neutral-100 dark:hover:bg-neutral-800/80 rounded-xl transition-colors"
+                    className="w-full text-center py-2 px-3 text-xs font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer"
                   >
                     View all results for &ldquo;{searchTerm}&rdquo; &rarr;
                   </button>
@@ -128,7 +127,7 @@ export default function TopHeader({
           {/* Search Icon Only (Tablet & Phone) */}
           <button
             onClick={() => navigate("/search")}
-            className="lg:hidden p-2.5 rounded-2xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300 transition-colors flex items-center justify-center"
+            className="lg:hidden p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors cursor-pointer"
             title="Search"
             aria-label="Search"
           >
@@ -137,14 +136,14 @@ export default function TopHeader({
 
           <button
             onClick={onOpenFavorites}
-            className="relative p-2.5 rounded-2xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300 transition-colors flex items-center gap-1.5"
+            className="relative p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors flex items-center gap-1.5 cursor-pointer"
             title="Wishlist"
             aria-label="Wishlist"
           >
             <Heart size={18} />
-            <span className="hidden md:inline text-xs font-semibold">Wishlist</span>
+            <span className="hidden md:inline text-xs font-medium text-zinc-300">Wishlist</span>
             {favoritesCount > 0 && (
-              <span className="bg-rose-500 text-white text-[10px] font-bold h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center">
+              <span className="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-semibold h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center tabular-nums">
                 {favoritesCount}
               </span>
             )}
@@ -153,14 +152,14 @@ export default function TopHeader({
           {/* Cart Toggle */}
           <button
             onClick={onOpenCart}
-            className="relative p-2.5 rounded-2xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-300 transition-colors flex items-center gap-1.5"
+            className="relative p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors flex items-center gap-1.5 cursor-pointer"
             aria-label="Toggle Cart"
             title="Cart"
           >
             <ShoppingCart size={18} />
-            <span className="hidden md:inline text-xs font-semibold">Cart</span>
+            <span className="hidden md:inline text-xs font-medium text-zinc-300">Bag</span>
             {cartCount > 0 && (
-              <span className="bg-[#6c5ce7] text-white text-[10px] font-black h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center">
+              <span className="bg-zinc-100 text-zinc-950 text-[10px] font-bold h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center tabular-nums shadow-xs">
                 {cartCount}
               </span>
             )}

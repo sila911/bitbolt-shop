@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { ArrowLeft, FilterSearch as SlidersHorizontal, Tag, Flash as Flame, Cup as Trophy, CloseCircle as X, SearchNormal1 as Search, MagicStar as Sparkles } from "iconsax-react";
+import { ArrowLeft, FilterSearch as SlidersHorizontal, Tag, Flash as Flame, Cup as Trophy, CloseCircle as X, SearchNormal1 as Search } from "iconsax-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { fetchAllProducts, fetchCategories, fetchProductsByCategory, searchProducts } from "../api";
 import ProductCard from "../components/ProductCard";
